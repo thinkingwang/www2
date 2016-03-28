@@ -92,9 +92,12 @@
                         <asp:BoundField DataField="复核值" HeaderText="复核值" >
                         <ItemStyle ForeColor="Black" />
                         </asp:BoundField>
-                        <asp:BoundField DataField="报警级别" HeaderText="报警级别" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
+                         <asp:TemplateField HeaderText="报警级别"  SortExpression="报警级别">
+                            <ItemTemplate>
+                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# PUBS.GetLevelTxt(Eval("报警级别")) %>'></asp:Label>
+                            </ItemTemplate>                    
+                                <ItemStyle ForeColor="Black" />
+                        </asp:TemplateField>
                         <asp:TemplateField HeaderText="复核人" SortExpression="复核人">
                             <ItemTemplate>
                                 <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# Bind("复核人") %>'><%# Eval("复核人")%></asp:Label>

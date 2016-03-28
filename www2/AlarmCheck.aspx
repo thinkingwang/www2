@@ -106,9 +106,9 @@ z-index:1000;
                         <asp:Label ID="lb_alarmState" runat="server" Text="报警级别："></asp:Label>
                         <asp:DropDownList ID="DropDownList4" runat="server" DataTextField="carNo">
                             <asp:ListItem Value="All">全部</asp:ListItem>
-                            <asp:ListItem Value="1">一级报警</asp:ListItem>
+                            <asp:ListItem Value="3">一级报警</asp:ListItem>
                             <asp:ListItem Value="2">二级报警</asp:ListItem>
-                            <asp:ListItem Value="3">三级报警</asp:ListItem>
+                            <asp:ListItem Value="1">三级报警</asp:ListItem>
                         </asp:DropDownList>
                     <asp:Label ID="lb_wheelNo" runat="server" Text="轮位："></asp:Label>
                         <asp:DropDownList ID="DropDownList2" runat="server" >
@@ -224,12 +224,15 @@ z-index:1000;
                         <asp:BoundField DataField="复核值" HeaderText="复核值" >
                         <ItemStyle ForeColor="Black" />
                         </asp:BoundField>
-                        <asp:BoundField DataField="报警级别" HeaderText="报警级别" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
+                        <asp:TemplateField HeaderText="报警级别"  SortExpression="报警级别">
+                            <ItemTemplate>
+                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# PUBS.GetLevelTxt(Eval("报警级别")) %>'></asp:Label>
+                            </ItemTemplate>                    
+                                <ItemStyle ForeColor="Black" />
+                        </asp:TemplateField>
                         <asp:TemplateField HeaderText="复核人" SortExpression="复核人">
                             <ItemTemplate>
-                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# Bind("复核人") %>'><%# Eval("复核人")%></asp:Label>
+                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# Bind("复核人") %>'></asp:Label>
                             </ItemTemplate>
                            <EditItemTemplate>
                                <ajaxToolkit:ComboBox ID="cb_recheckPerson" DataSourceID="SqlDataSource3" DropDownStyle="DropDown" DataTextField="DisplayName" MaxLength="30" style="top:10px" Width="100%" runat="server"></ajaxToolkit:ComboBox>

@@ -456,6 +456,27 @@ public static class PUBS
         else
             return str;
     }
+
+    public static string GetLevelTxt(object level)
+    {
+        var levelStr = "正常";
+        switch (level.ToString())
+        {
+            case "1":
+                levelStr = "I";
+                break;
+            case "2":
+                levelStr = "II";
+                break;
+            case "3":
+                levelStr = "III";
+                break;
+        }
+        if (dic.ContainsKey(levelStr))
+            return dic[levelStr];
+        return levelStr;
+    }
+
     public static void Log(string sIP, string sName, int iOP, string sData)
     {
         try
