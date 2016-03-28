@@ -1,0 +1,110 @@
+[Version]
+Signature="$CHICAGO$"
+AdvancedINF=2.5
+
+[DefaultInstall]
+CopyFiles=install.files
+RegisterOCXs=RegisterFiles
+AddReg=AddToRegistry
+
+[RInstallApplicationFiles]
+CopyFiles=install.files
+RegisterOCXs=RegisterFiles
+AddReg=AddToRegistry
+
+[DefaultUninstall]
+Delfiles=install.files
+UnRegisterOCXs=RegisterFiles
+
+[DestinationDirs]
+install.files=11
+[SourceDisksNames]
+1=%DiskName%,NetVideoActiveX23.cab,1
+
+[Add.Code]
+NetVideoActiveX23.ocx = NetVideoActiveX23.ocx
+HCNetSDK.dll = HCNetSDK.dll
+PlayCtrl.dll = PlayCtrl.dll
+hpr.dll = hpr.dll
+StreamTransClient.dll = StreamTransClient.dll
+SystemTransform.dll = SystemTransform.dll
+ShowRemConfig.dll = ShowRemConfig.dll
+RemConfigRes_CHI.dll = RemConfigRes_CHI.dll
+RemConfigRes_ENG.dll = RemConfigRes_ENG.dll
+
+
+[install.files]
+NetVideoActiveX23.ocx = NetVideoActiveX23.ocx
+HCNetSDK.dll = HCNetSDK.dll
+PlayCtrl.dll = PlayCtrl.dll
+hpr.dll = hpr.dll
+StreamTransClient.dll = StreamTransClient.dll
+SystemTransform.dll = SystemTransform.dll
+ShowRemConfig.dll = ShowRemConfig.dll
+RemConfigRes_CHI.dll = RemConfigRes_CHI.dll
+RemConfigRes_ENG.dll = RemConfigRes_ENG.dll
+
+
+[SourceDisksFiles]
+HCNetSDK.dll = 1
+PlayCtrl.dll = 1
+StreamTransClient.dll = 1
+SystemTransform.dll = 1
+hpr.dll = 1
+ShowRemConfig.dll = 1
+RemConfigRes_CHI.dll = 1
+RemConfigRes_ENG.dll = 1
+NetVideoActiveX23.inf = 1
+NetVideoActiveX23.ocx = 1
+
+
+[NetVideoActiveX23.ocx]
+file-win32-x86=thiscab
+RegisterServer=yes
+clsid={CAFCF48D-8E34-4490-8154-026191D73924}
+DestDir= 11
+FileVersion=2,3,19,1
+
+[HCNetSDK.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=4,0,1,3
+
+[PlayCtrl.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=6,1,1,19
+
+[StreamTransClient.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=1,0,4,3
+
+[SystemTransform.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=1,0,0,9
+
+[hpr.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=0,5,1,5
+
+[ShowRemConfig.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=2,0,19,0
+
+[RemConfigRes_CHI.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=2,0,15,0
+
+[RemConfigRes_ENG.dll]
+file-win32-x86=thiscab
+DestDir=11
+FileVersion=2,0,15,0
+
+
+[RegisterFiles]
+%11%\NetVideoActiveX23.ocx

@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema id="OriginalDataSet" targetNamespace="http://tempuri.org/DataSet1.xsd" xmlns:mstns="http://tempuri.org/DataSet1.xsd" xmlns="http://tempuri.org/DataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:element name="OriginalDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="OriginalDataTable">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="axle" type="xs:unsignedShort" />
+              <xs:element name="wheel" type="xs:unsignedShort" />
+              <xs:element name="detector" type="xs:unsignedInt" />
+              <xs:element name="line" type="xs:unsignedShort" />
+              <xs:element name="data" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="PKey" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:OriginalDataTable" />
+      <xs:field xpath="mstns:axle" />
+      <xs:field xpath="mstns:wheel" />
+      <xs:field xpath="mstns:detector" />
+      <xs:field xpath="mstns:line" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

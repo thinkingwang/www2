@@ -1,0 +1,52 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" /> <title>悬浮广告</title> </head>  
+<body> 
+<div style="height:900px; display:block;"></div> 
+<div id="AdLayer1" style='position: absolute; ;z-index:1; left:100px; border:1px #DDD solid; width:36px; height:200px; background-color:#CCC;'></div> 
+<div id="AdLayer2" style='position: absolute; ;z-index:1; right:100px; border:1px #DDD solid; width:36px; height:200px; background-color:green;'></div>  
+  <script type="text/javascript">
+function initEcAd() 
+{ 
+ document.all.AdLayer1.style.posTop = 200;  
+document.all.AdLayer1.style.visibility = 'visible'
+  document.all.AdLayer2.style.posTop = 200;
+document.all.AdLayer2.style.visibility = 'visible'
+MoveLeftLayer('AdLayer1');
+MoveRightLayer('AdLayer2');
+ }
+
+function MoveLeftLayer(layerName) { 
+ var x = 100; 
+ var y = 100;
+var diff = (document.body.scrollTop + y - document.all.AdLayer1.style.posTop) * .40; 
+ var y = document.body.scrollTop + y - diff;
+eval("document.all." + layerName + ".style.posTop = parseInt(y)");
+eval("document.all." + layerName + ".style.posLeft = x");
+setTimeout("MoveLeftLayer('AdLayer1');", 20);
+ }
+
+function MoveRightLayer(layerName) { 
+ var x = 100; 
+ var y = 100;
+var diff = (document.body.scrollTop + y - document.all.AdLayer2.style.posTop) * .40;  
+var y = document.body.scrollTop + y - diff;
+eval("document.all." + layerName + ".style.posTop = y");
+eval("document.all." + layerName + ".style.posRight = x");
+setTimeout("MoveRightLayer('AdLayer2');", 20);
+}
+
+
+initEcAd() 
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
+
+

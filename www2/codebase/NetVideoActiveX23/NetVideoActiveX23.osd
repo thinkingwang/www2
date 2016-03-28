@@ -1,0 +1,21 @@
+<?XML version="1.0"?>
+<!DOCTYPE SOFTPKG SYSTEM "http://msdn.microsoft.com/workshop/standards/osd/osd.dtd">
+<?XML::NAMESPACE HREF="http://msdn.microsoft.com/workshop/standards/osd/msicd.dtd" AS="msicd"?>
+
+<SOFTPKG
+	NAME="{CAFCF48D-8E34-4490-8154-026191D73924}"
+	VERSION="2,3,19,1"
+	STYLE="MSICD">
+	<TITLE>NetVideoActiveX23 Control</TITLE>
+	<ABSTRACT>Show real time video through internet</ABSTRACT>
+        <MSICD::NATIVECODE>
+             	<CODE CLASSID="{CAFCF48D-8E34-4490-8154-026191D73924}"
+             	NAME="NetVideoActiveX23.inf"
+             	VERSION="2,3,19,1">
+                        <IMPLEMENTATION>
+                                <PROCESSOR VALUE="x86" />
+                                <CODEBASE FILENAME="NetVideoActiveX23.inf" />
+                        </IMPLEMENTATION>
+                </CODE>
+        </MSICD::NATIVECODE>
+</SOFTPKG>
