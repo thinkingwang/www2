@@ -1,7 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="rpt_train_detail2.aspx.cs" Inherits="whms_wheel" %>
 
-<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-    Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
+<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"namespace="Microsoft.Reporting.WebForms" tagprefix="rsweb" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,9 +16,9 @@
 
     <%=PUBS.OutputHead("") %>
     <div class="cmd">
-        <asp:LoginName ID="LoginName2" runat="server" SkinID="LoginName1" />
+        <asp:LoginName ID="LoginName2" runat="server" />
         <asp:LoginStatus ID="LoginStatus2" runat="server"  LogoutAction="RedirectToLoginPage" 
-            SkinID="LoginStatus1" onloggedout="LoginStatus2_LoggedOut" />
+             onloggedout="LoginStatus2_LoggedOut" />
         &nbsp;
         <asp:Button ID="bt_export" runat="server" Text="导出" onclick="bt_export_Click" />
         &nbsp;
@@ -38,9 +37,11 @@
                 </DataSources>
             </LocalReport>
         </rsweb:ReportViewer>
-        <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" 
-            TypeName="tycho_kcDataSetTableAdapters."></asp:ObjectDataSource>
-    </div>
+        <asp:ObjectDataSource ID="ObjectDataSource1" 
+            runat="server" 
+            TypeName="tycho_kcDataSetTableAdapters." >
+        </asp:ObjectDataSource>
+    </div> 
 
     <%=PUBS.OutputFoot("") %>
     </form>

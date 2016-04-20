@@ -164,7 +164,11 @@ public static class PUBS
             SqlCommand cmd = new SqlCommand() { Connection = conn };
             conn.Open();
             cmd.CommandType = CommandType.Text;
-            cmd.CommandText = string.Format("update aspnet_Roles set RoleName='{0}' ,Description='{1}',RoleLevel='{2}'  where RoleName='{3}'", roleNameNew, desc, roleLevel,roleNameOld);
+            cmd.CommandText = string.Format("update aspnet_Roles set RoleName='{0}' ,Description='{1}',RoleLevel='{2}'  where RoleName='{3}'", roleNameNew, desc, roleLevel+"级",roleNameOld);
+            cmd.ExecuteNonQuery();
+            cmd.CommandText =
+                string.Format("delete from aspnet_RoleAndPageControl where RoleName='{0}'",
+                     roleNameNew);
             cmd.ExecuteNonQuery();
             foreach (var item in userPowers)
             {
@@ -177,18 +181,48 @@ public static class PUBS
                             "insert into aspnet_RoleAndPageControl (RoleName,Id) values('{1}',@id)",
                             item.Item1, roleNameNew);
                     cmd.ExecuteNonQuery();
-                    continue;
                 }
-                cmd.CommandText =
-                    string.Format(
-                        "declare @id nvarchar(50) select @id = Id from aspnet_PageElementControl where Name='{0}'" +
-                        " if(exists(select * from aspnet_RoleAndPageControl  where RoleName='{1}' and Id=@id )) " +
-                        "delete from aspnet_RoleAndPageControl where RoleName='{1}' and Id=@id",
-                        item.Item1, roleNameNew);
-                cmd.ExecuteNonQuery();
             }
         }
     }
+
+    public static List<string> GetPowersForRole(string roleName)
+    {
+        using (
+            var conn =
+                new SqlConnection(
+                    System.Configuration.ConfigurationManager.ConnectionStrings["aspnetConnectionString"]
+                        .ConnectionString))
+        {
+            var powerList = new List<string>();
+            SqlCommand cmd = new SqlCommand() {Connection = conn};
+            conn.Open();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText =
+                string.Format(
+                    "select Name,C.Description,case when isnull(B.Id,0)=0 then 0 else 1 end as isAllowed from aspnet_PageElementControl as A inner join aspnet_RoleAndPageControl as B on A.Id = B.Id and B.RoleName='{0}' left join aspnet_Roles as C on B.RoleName=C.RoleName",
+                    roleName);
+            var sqlReader = cmd.ExecuteReader();
+            while (sqlReader.Read())
+            {
+                powerList.Add(sqlReader[0].ToString());
+            }
+            sqlReader.Close();
+            sqlReader.Dispose();
+            return powerList;
+        }
+    }
+
+    public static string GetCurrentUser()
+    {
+        var user = Membership.GetUser();
+        if (user == null)
+        {
+            return "";
+        }
+        return user.UserName;
+    }
+
     /// <summary>
     /// 获取用户显示名
     /// </summary>
@@ -244,6 +278,27 @@ public static class PUBS
                 return userName;
             }
             return displayName;
+        }
+    }
+
+    /// <summary>
+    /// 获取用户显示名
+    /// </summary>
+    /// <param name="userName"></param>
+    /// <returns></returns>
+    public static void SetUserDisplayName(string userName,string displayName)
+    {
+        using (
+            SqlConnection sqlConnection =
+                new SqlConnection(ConfigurationManager.ConnectionStrings["aspnetConnectionString"].ConnectionString))
+        {
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.CommandType = System.Data.CommandType.Text;
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = string.Format("update dbo.aspnet_Users set DisplayName ='{0}'  where UserName='{1}'",
+                displayName,userName);
+            sqlCommand.ExecuteNonQuery();
         }
     }
 
@@ -477,6 +532,20 @@ public static class PUBS
         return levelStr;
     }
 
+    public static string GetLogContect(char split ,params string[] sources)
+    {
+        StringBuilder builder = new StringBuilder();
+        foreach (var source in sources)
+        {
+            builder.Append(source);
+            if (builder[builder.Length-1] == ':')
+            {
+                continue;
+            }
+            builder.Append(split);
+        }
+        return builder.ToString().TrimEnd(split);
+    }
     public static void Log(string sIP, string sName, int iOP, string sData)
     {
         try
@@ -549,6 +618,33 @@ public static class PUBS
         sqlbulkcopy.Close();
     }
 
+    public static List<string> GetDatatableLogdata(string sql)
+    {
+        using (
+            SqlConnection sqlConnection =
+                new SqlConnection(ConfigurationManager.ConnectionStrings["tychoConnectionString"].ConnectionString))
+        {
+            SqlCommand cmd = new SqlCommand() { Connection = sqlConnection };
+            sqlConnection.Open();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = sql;
+            var reader = cmd.ExecuteReader();
+            var resultStr = new List<string>();
+            while (reader.Read())
+            {
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    builder.Append(reader.GetName(i));
+                    builder.Append(":");
+                    builder.Append(reader[i]);
+                    builder.Append(',');
+                }
+                resultStr.Add(builder.ToString());
+            }
+            return resultStr;
+        }
+    } 
     public static DataTable ConvertDataReaderToDataTable(SqlDataReader dataReader)
     {
         DataTable datatable = new DataTable("DataTable");
@@ -775,7 +871,7 @@ public static class PUBS
             updown = 0;
             return;
         }
-        double value = double.Parse(strValue);
+        double value = Convert.ToDouble(strValue);
 
         if (value > double.Parse(dt.Rows[0]["up_level1"].ToString()))
         {
@@ -800,6 +896,25 @@ public static class PUBS
         }
     }
 
+    public static string GetEngine_TypeLocation(object type)
+    {
+        try
+        {
+            var trainLocation = Convert.ToByte(type);
+            switch (trainLocation)
+            {
+                case 0:
+                    return "本所";
+                case 1:
+                    return "本段";
+            }
+            return "本所";
+        }
+        catch (Exception)
+        {
+            return "本所";
+        }
+    }
     //public static void GetProfileStatus(string name, string  strValue, out int updown, out int level, out string desc)
     //{
     //    DataTable dt = PUBS.sqlQuery(string.Format("select * from thresholds where name='{0}'", name));

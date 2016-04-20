@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
 <title><%=PUBS.Txt("登录")%></title>
-<link href=<%=(string)Application["css"] %> type="text/css" rel="stylesheet"/>
+<link href=<%=(string)Session["css"] %> type="text/css" rel="stylesheet"/>
 
 </head>
 <body>

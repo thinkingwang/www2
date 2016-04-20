@@ -30,7 +30,7 @@
         </div>
     <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
         ConnectionString="<%$ ConnectionStrings:tychoConnectionString %>" 
-        ProviderName="<%$ ConnectionStrings:tychoConnectionString.ProviderName %>" SelectCommand="exec dbo.GetOneTrainAlarms @datetimestr" UpdateCommand="exec [dbo].[SetRecheck] @testDatetime,@carNo,@wheelPos,@checkItem,@checkValue,@recheckValue,@level,@recheckPerson,@recheckDesc,@operator,@description" >
+        ProviderName="<%$ ConnectionStrings:tychoConnectionString.ProviderName %>" SelectCommand="exec dbo.GetOneTrainAlarmsForWaiXing @datetimestr" UpdateCommand="exec [dbo].[SetRecheck] @testDatetime,@carNo,@wheelPos,@checkItem,@checkValue,@recheckValue,@level,@recheckPerson,@recheckDesc,@operator,@description" >
         
         <SelectParameters>
             <asp:QueryStringParameter Name="datetimestr" QueryStringField="datetimestr" />
@@ -56,70 +56,17 @@
 
     <ContentTemplate>
         <div class="content">        
-
+            <asp:Panel ID="Panel1" runat="server">
             <div class="title" ><span class="title">
-                <asp:Label ID="lb_title" runat="server" Text="报警复核"></asp:Label></span>
+                <asp:Label ID="lb_title" runat="server" Text="外形报警复核"></asp:Label></span>
             </div>
-                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="3"
+                <asp:GridView ID="GridView1" runat="server" CellPadding="3"
                     Width="976px" onrowcancelingedit="GridView1_RowCancelingEdit" 
                     onrowupdating="GridView1_RowUpdating" 
-                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF" DataSourceID="SqlDataSource1" AllowSorting="True" HorizontalAlign="Center" OnRowEditing="GridView1_RowEditing" OnRowDataBound="GridView1_RowDataBound" BorderWidth="1px">
+                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF" AllowSorting="True" HorizontalAlign="Center"  ForeColor="Black" OnRowEditing="GridView1_RowEditing" OnRowDataBound="GridView1_RowDataBound" BorderWidth="1px" OnRowCommand="GridView1_RowCommand" AutoGenerateColumns="False">
                     <Columns>
-                        <asp:BoundField DataField="序号" HeaderText="序号" ReadOnly="True" >
-                        <HeaderStyle Width="40px" />
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="检测时间" HeaderText="检测时间" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" ReadOnly="True" >
-                        <HeaderStyle Width="100px" />
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="车组号" HeaderText="车组号"  ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" HorizontalAlign="Left" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="车厢号" HeaderText="车厢号" ReadOnly="True" >
-                        <HeaderStyle Width="100px" />
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="轮位" HeaderText="轮位" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="检测项" HeaderText="检测项" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="检测值" HeaderText="检测值" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="复核值" HeaderText="复核值" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                         <asp:TemplateField HeaderText="报警级别"  SortExpression="报警级别">
-                            <ItemTemplate>
-                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# PUBS.GetLevelTxt(Eval("报警级别")) %>'></asp:Label>
-                            </ItemTemplate>                    
-                                <ItemStyle ForeColor="Black" />
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="复核人" SortExpression="复核人">
-                            <ItemTemplate>
-                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# Bind("复核人") %>'><%# Eval("复核人")%></asp:Label>
-                            </ItemTemplate>
-                           <EditItemTemplate>
-                               <ajaxToolkit:ComboBox ID="cb_recheckPerson" DataSourceID="SqlDataSource2" DropDownStyle="DropDown" DataTextField="DisplayName" MaxLength="30" style="top:10px" Width="100%" runat="server"></ajaxToolkit:ComboBox>
-                           </EditItemTemplate>                       
-                                <ItemStyle ForeColor="Black" />
-                        </asp:TemplateField>
-                        <asp:BoundField DataField="处理意见" HeaderText="处理意见" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="处理人" HeaderText="处理人"  ReadOnly="True">
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="备注" HeaderText="备注" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:CommandField HeaderText="编辑 " ShowEditButton="True" EditText="编缉" 
-                        CancelText="取消" UpdateText="更新" ItemStyle-ForeColor="#33CCFF" 
-                        ControlStyle-ForeColor="#33CCFF" >
-                            </asp:CommandField> 
+                        <asp:ButtonField  Text="编辑" runat="server" CommandName="recheck"
+                                     />
                     </Columns>
                     <HeaderStyle ForeColor="White" />
                     <PagerStyle ForeColor="Black" HorizontalAlign="Center" />
@@ -127,8 +74,55 @@
                     <SortedAscendingHeaderStyle ForeColor="White" />
                     <SortedDescendingHeaderStyle ForeColor="White" />
                     </asp:GridView>              
-            <ajaxToolkit:ComboBox ID="cb_recheckPerson1"  Visible="False" runat="server"></ajaxToolkit:ComboBox>
-
+                </asp:Panel>
+        </div>
+        <div class="content">        
+            
+            <asp:Panel ID="Panel2" runat="server">
+            <div class="title" ><span class="title">
+                <asp:Label ID="Label1" runat="server" Text="探伤报警复核"></asp:Label></span>
+            </div>
+                <asp:GridView ID="GridView2" runat="server" CellPadding="3"
+                    Width="976px" onrowcancelingedit="GridView1_RowCancelingEdit" 
+                    onrowupdating="GridView1_RowUpdating" 
+                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF" AllowSorting="True" HorizontalAlign="Center"  BorderWidth="1px" OnRowCommand="GridView2_RowCommand" ForeColor="Black" AutoGenerateColumns="False" >
+                    <Columns>
+                        <asp:ButtonField  Text="编辑" runat="server" CommandName="recheck"
+                                     />
+                    </Columns>
+                    <HeaderStyle ForeColor="White" />
+                    <PagerStyle ForeColor="Black" HorizontalAlign="Center" />
+                    <SortedAscendingCellStyle ForeColor="Black" />
+                    <SortedAscendingHeaderStyle ForeColor="White" />
+                    <SortedDescendingHeaderStyle ForeColor="White" />
+                    </asp:GridView>              
+            <ajaxToolkit:ComboBox ID="ComboBox1"  Visible="False" runat="server"></ajaxToolkit:ComboBox>
+                           
+                </asp:Panel>
+        </div>
+        
+        <div class="content">        
+            
+            <asp:Panel ID="Panel3" runat="server">
+            <div class="title" ><span class="title">
+                <asp:Label ID="Label2" runat="server" Text="擦伤报警复核"></asp:Label></span>
+            </div>
+                <asp:GridView ID="GridView3" runat="server" CellPadding="3"
+                    Width="976px" 
+                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF" AllowSorting="True" HorizontalAlign="Center"  BorderWidth="1px" OnRowCommand="GridView3_RowCommand" ForeColor="Black" AutoGenerateColumns="False" >
+                    <Columns>
+                        <asp:ButtonField  Text="编辑" runat="server" CommandName="recheck"
+                                     />
+                    </Columns>
+                    <HeaderStyle ForeColor="White" />
+                    <PagerStyle ForeColor="Black" HorizontalAlign="Center" />
+                    <SortedAscendingCellStyle ForeColor="Black" />
+                    <SortedAscendingHeaderStyle ForeColor="White" />
+                    <SortedDescendingHeaderStyle ForeColor="White" />
+                    </asp:GridView>              
+            <ajaxToolkit:ComboBox ID="ComboBox2"  Visible="False" runat="server"></ajaxToolkit:ComboBox>
+                           
+                </asp:Panel>
         </div>
                             </ContentTemplate>
     </asp:UpdatePanel>

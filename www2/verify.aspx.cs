@@ -16,11 +16,6 @@ public partial class Verify : System.Web.UI.Page
     {
         if (Session["login"] == null)
             Response.Redirect(PUBS.HomePage);
-        if (PUBS.GetUserLevel() > 1)
-        {
-            Response.Write("<script>alert(\'无权限\');</script>");
-            Response.Redirect(PUBS.HomePage);
-        }
 
 
         var name = PUBS.GetUserDisplayName(Context.User.Identity.Name);

@@ -9,6 +9,8 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Data.SqlClient;
+using System.Text;
+
 //using System.Xml.Linq;
 
 public partial class Verify : System.Web.UI.Page
@@ -28,11 +30,6 @@ public partial class Verify : System.Web.UI.Page
     {
         if (Session["login"] == null)
             Response.Redirect(PUBS.HomePage);
-        if (PUBS.GetUserLevel() > 1)
-        {
-            Response.Write("<script>alert(\'无权限\');</script>");
-            Response.Redirect(PUBS.HomePage);
-        }
         if (!IsPostBack)
         {
         }
@@ -58,8 +55,8 @@ public partial class Verify : System.Web.UI.Page
         GridView1.EditIndex = e.NewEditIndex;
         GridView1.DataBind();
     }
-   
-    
+
+
     protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
         Session["OldTrainNoFrom"] = e.OldValues["trainNoFrom"];
@@ -68,9 +65,15 @@ public partial class Verify : System.Web.UI.Page
         Session["TrainNoTo"] = e.NewValues["trainNoTo"];
         Session["TrainType"] = e.NewValues["trainType"];
         Session["Format"] = e.NewValues["format"];
-        var row = GridView1.Rows[e.RowIndex];
+        var log = PUBS.GetLogContect(',', "调整的车型关键字，车型,车号开始数字，车号结束数字分别为：",
+            Session["TrainType"].ToString(), 
+            Session["OldTrainNoFrom"].ToString(), Session["OldTrainNoTo"].ToString(),
+            "。调整后的车型，车号开始数字，车号结束数字，车号显示格式分别为：",
+            Session["TrainType"].ToString(), Session["TrainNoFrom"].ToString(),
+            Session["TrainNoTo"].ToString(), Session["Format"].ToString());
+        PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 15, log);
     }
-    
+
     protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
     }
@@ -97,6 +100,11 @@ public partial class Verify : System.Web.UI.Page
         Session["TrainNoTo"] = trainNoTo.Text;
         Session["Format"] = format.Text;
         SqlDataSource1.Insert();
+        var log = PUBS.GetLogContect(',', "增加的车型，车型,车号开始数字，车号结束数字，车号显示格式分别为：",
+            Session["TrainType"].ToString(), Session["TrainNoFrom"].ToString(),
+            Session["TrainNoTo"].ToString(),
+            Session["Format"].ToString());
+        PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 17, log);
     }
     protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
@@ -106,6 +114,9 @@ public partial class Verify : System.Web.UI.Page
         SqlDataSource1.DeleteCommand = string.Format(
             "delete from dbo.TrainType where trainNoFrom={0} and trainNoTo={1}", a.Text, b.Text);
         SqlDataSource1.Delete();
+        var log = PUBS.GetLogContect(',', "删除的车型关键字，车号开始数字，车号结束数字分别为：",
+            a.Text, b.Text);
+        PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 17, log);
     }
 
     protected void Cancel_Click(object sender, EventArgs e)
@@ -116,9 +127,10 @@ public partial class Verify : System.Web.UI.Page
     }
     protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
     {
+        var paras = e.CommandArgument.ToString().Split(',');
         if (e.CommandName == "check")
         {
-            Response.Redirect("adjustCarPower.aspx?trainType=" + e.CommandArgument);
+            Response.Redirect("adjustCarPower.aspx?trainType=" + paras[0]+"&trainNoFrom=" + paras[1]+"&trainNoTo="+paras[2]);
         }
     }
 

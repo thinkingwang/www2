@@ -16,17 +16,15 @@ public partial class newuser : System.Web.UI.Page
     {
         if (Session["login"] == null)
             Response.Redirect(PUBS.HomePage);
-        if (PUBS.GetUserLevel() != 0)
-        {
-            Response.Write("<script>alert(\'无权限\');</script>");
-            Response.Redirect(PUBS.HomePage);
-        }
+        var name = PUBS.GetUserDisplayName(Context.User.Identity.Name);
+        LoginName2.FormatString = name;
     }
     protected void CreateUserWizard1_CreatedUser(object sender, EventArgs e)
     {
         var userName = CreateUserWizard1.CreateUserStep.ContentTemplateContainer.FindControl("UserName") as TextBox;
+        var displayName = CreateUserWizard1.CreateUserStep.ContentTemplateContainer.FindControl("DisplayName") as TextBox;
             Roles.AddUserToRole(userName.Text, dl_roles.SelectedValue);
-            
+            PUBS.SetUserDisplayName(userName.Text, displayName.Text);
             PUBS.Log(Request.UserHostAddress, Membership.GetUser().UserName, 4, CreateUserWizard1.UserName);
     }
     protected void LoginStatus2_LoggedOut(object sender, EventArgs e)

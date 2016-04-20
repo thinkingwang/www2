@@ -54,7 +54,7 @@ public partial class whms_wheel : System.Web.UI.Page
             {
                 prn = (PrnWhmsWheel)Session["PrnWhmsWheel"];
 
-                AddParameter("name", Application["SYS_NAME"].ToString());
+                AddParameter("name", Session["SYS_NAME"].ToString());
                 AddParameter("testDateTime", prn.testDateTime);
                 AddParameter("trainInfo", prn.trainInfo);
                 AddParameter("carInfo", prn.carInfo);

@@ -37,7 +37,7 @@
 {
 	background-color:#006699;
 	color:#ffffff;
-	padding-left:10;
+	padding-left:10px;
 }
 
 .crpagepath A
@@ -330,9 +330,9 @@
 
 .CRGridViewerHeading 
 {				
-	height:40;
+	height:40px;
 	background-color:#CAC9D9;
-	border-width:1;
+	border-width:1px;
 	font-family:verdana,Arial;
 }
 
@@ -341,7 +341,7 @@
 {							
 	padding:2px;
 	text-align:center;
-	border-width:1;			     
+	border-width:1px;			     
 	font-family:verdana,Arial;
 }	
 				

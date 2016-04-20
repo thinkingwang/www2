@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Activities.Statements;
 using System.Data;
 using System.Configuration;
 using System.Collections;
@@ -62,108 +63,124 @@ public partial class Details_kc : System.Web.UI.Page
 
     protected void Page_PreInit(object sender, EventArgs e)
     {
-        if (Session["login"] == null)
-            Response.Redirect(PUBS.HomePage);
-
-        m_VideoPasswd = Application["VideoPW"].ToString();
-
-        m_sDateTime = Request.QueryString["field"].Replace('_', ':');
-        bReAnalysis = Request.QueryString["reanalysis"] != null;
-        if (m_sDateTime == null)
-            Response.Redirect("blank.htm");
-
-        if (Session["mDateTime"] == null)
-            Session.Add("mDateTime", m_sDateTime);
-        else
-            Session["mDateTime"] = m_sDateTime;
-
-        //System.Data.DataView dv = (System.Data.DataView)SqlDataSource6.Select(DataSourceSelectArguments.Empty);
-        //dtThresholds = dv.Table;
-
-        //SqlDataSource1.SelectParameters.Clear();
-        //SqlDataSource1.SelectParameters.Add("sDateTime", m_sDateTime);
-        System.Data.DataView dv = (System.Data.DataView)SqlDataSource1.Select(DataSourceSelectArguments.Empty);
-        System.Data.DataTable dt = dv.Table;
-
-        m_iAxleNum = Convert.ToInt32(dv[0]["axleNum"]);
-        if (m_iAxleNum > 16)
+        try
         {
-            LjCha_Bz = new string[m_iAxleNum / 16 +1];
-            Level_LjCha_Bz = new int[m_iAxleNum / 16 +1];
+            if (Session["login"] == null)
+            {
+                Response.Redirect(PUBS.HomePage);
+                ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "alert", "alert('" + "session失效" + "');", true);
+            }
+            m_VideoPasswd = Session["VideoPW"].ToString();
+
+            m_sDateTime = Request.QueryString["field"].Replace('_', ':');
+            bReAnalysis = Request.QueryString["reanalysis"] != null;
+            if (m_sDateTime == null)
+                Response.Redirect("blank.htm");
+
+            if (Session["mDateTime"] == null)
+                Session.Add("mDateTime", m_sDateTime);
+            else
+                Session["mDateTime"] = m_sDateTime;
+
+            //System.Data.DataView dv = (System.Data.DataView)SqlDataSource6.Select(DataSourceSelectArguments.Empty);
+            //dtThresholds = dv.Table;
+
+            //SqlDataSource1.SelectParameters.Clear();
+            //SqlDataSource1.SelectParameters.Add("sDateTime", m_sDateTime);
+            System.Data.DataView dv = (System.Data.DataView)SqlDataSource1.Select(DataSourceSelectArguments.Empty);
+            System.Data.DataTable dt = dv.Table;
+
+            m_iAxleNum = Convert.ToInt32(dv[0]["axleNum"]);
+            if (m_iAxleNum > 16)
+            {
+                LjCha_Bz = new string[m_iAxleNum / 16 + 1];
+                Level_LjCha_Bz = new int[m_iAxleNum / 16 + 1];
+                for (int i = 0; i < LjCha_Bz.Length; i++)
+                {
+                    LjCha_Bz[i] = "0";
+                }
+            }
+            else
+            {
+                LjCha_Bz = new string[1];
+                Level_LjCha_Bz = new int[1];
+            }
+
+            m_scratchNum = Convert.ToInt32(dv[0]["scratchNum1"]);
+
+            if (dv[0]["waterLevel"] != DBNull.Value)
+                waterLevel = Convert.ToInt32(dv[0]["waterLevel"]);
+
+            bzh = dv[0]["bzh"].ToString();
+
+            m_dt = Convert.ToDateTime(dv[0]["testDateTime"]);
+            sTestDateTime = m_dt.ToString("yyyy-MM-dd HH:mm:ss");
+
+            m_bIsTypical = (bool)dv[0]["IsTypical"];
+
+            status = dv[0]["status"].ToString();
+
+            m_bIsView = !(PUBS.sqlQuery(string.Format("select * from checkTime where testDateTime='{0}' and userName ='{1}'", m_sDateTime, Membership.GetUser().UserName)).Rows.Count == 0);
+
+            haveSpeed = PUBS.sqlQuery(string.Format("select * from speed where testDateTime='{0}'", m_sDateTime)).Rows.Count > 0;
+
+            //m_bIsView = (bool)dv[0]["IsView"];
+
+
+            Session["engNum"] = m_sEngineNoA;
+            Session["AxleNum"] = m_iAxleNum;
+            if (m_scratchNum == -1)
+                Session["scratchNum"] = "-";
+            else
+                Session["scratchNum"] = "无";
+
+
+            if (m_bIsTypical)
+            {
+                DetailsView1.SkinID = "blue";
+
+                //btTypical.Text = "取消典型";
+            }
+            else
+            {
+                DetailsView1.SkinID = "yellow";
+
+                //btTypical.Text = "设为典型";
+            }
+
+            bt_SelectTrain.Text = PUBS.Txt("选择列车");
+            bt_proc.Text = PUBS.Txt("处理完成");
+            bt_update.Text = PUBS.Txt("更新");
+            RadioButton1.Text = PUBS.Txt("正面进线");
+            RadioButton2.Text = PUBS.Txt("机房室内");
+            RadioButton3.Text = PUBS.Txt("机房门口");
+            RadioButton4.Text = PUBS.Txt("侧面进线");
+            DetailsView1.Fields[0].HeaderText = PUBS.Txt("检测时间") + ":";
+            DetailsView1.Fields[1].HeaderText = PUBS.Txt("车组号") + ":";
+            DetailsView1.Fields[2].HeaderText = PUBS.Txt("进线速度") + ":";
+            DetailsView1.Fields[3].HeaderText = PUBS.Txt("离线速度") + ":";
+            //DetailsView1.Fields[4].HeaderText = PUBS.Txt("水温") + ":";
+            DetailsView1.Fields[4].HeaderText = PUBS.Txt("端位") + ":";
+            DetailsView1.Fields[5].HeaderText = PUBS.Txt("轴数") + ":";
+            LoginStatus1.LogoutText = PUBS.Txt("注销");
+            bt_compare.Text = PUBS.Txt("比对");
+            bt_updateCarNo.Text = PUBS.Txt("更新");
+            btTypical.Text = PUBS.Txt("锁定");
+            btNoTypical.Text = PUBS.Txt("解锁");
+
+            //地铁离线速度不显示，因为只有一个速度值，是从外形取的
+            if (PUBS.TYPE == "地铁")
+                DetailsView1.Fields[3].Visible = false;
+            var name = PUBS.GetUserDisplayName(Context.User.Identity.Name);
+            LoginName1.FormatString = name;
         }
-        else
+        catch (Exception ex)
         {
-            LjCha_Bz = new string[1];
-            Level_LjCha_Bz = new int[1];
+
+            ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "alert", "alert('" + ex.Message + "');", true);
+            Response.Redirect("login.aspx");
         }
-
-        m_scratchNum = Convert.ToInt32(dv[0]["scratchNum1"]);
-
-        if (dv[0]["waterLevel"] != DBNull.Value)
-            waterLevel = Convert.ToInt32(dv[0]["waterLevel"]);
-
-        bzh = dv[0]["bzh"].ToString();
-
-        m_dt = Convert.ToDateTime(dv[0]["testDateTime"]);
-        sTestDateTime = m_dt.ToString("yyyy-MM-dd HH:mm:ss");
-
-        m_bIsTypical = (bool)dv[0]["IsTypical"];
-
-        status = dv[0]["status"].ToString();
-
-        m_bIsView = !(PUBS.sqlQuery(string.Format("select * from checkTime where testDateTime='{0}' and userName ='{1}'", m_sDateTime, Membership.GetUser().UserName)).Rows.Count == 0);
-
-        haveSpeed = PUBS.sqlQuery(string.Format("select * from speed where testDateTime='{0}'", m_sDateTime)).Rows.Count > 0;
-
-        //m_bIsView = (bool)dv[0]["IsView"];
-
-
-        Session["engNum"] = m_sEngineNoA;
-        Session["AxleNum"] = m_iAxleNum;
-        if (m_scratchNum == -1)
-            Session["scratchNum"] = "-";
-        else
-            Session["scratchNum"] = "无";
-
-
-        if (m_bIsTypical)
-        {
-            DetailsView1.SkinID = "blue";
-
-            //btTypical.Text = "取消典型";
-        }
-        else
-        {
-            DetailsView1.SkinID = "yellow";
-
-            //btTypical.Text = "设为典型";
-        }
-
-        bt_SelectTrain.Text = PUBS.Txt("选择列车");
-        bt_proc.Text = PUBS.Txt("处理完成");
-        bt_update.Text = PUBS.Txt("更新");
-        RadioButton1.Text = PUBS.Txt("正面进线");
-        RadioButton2.Text = PUBS.Txt("机房室内");
-        RadioButton3.Text = PUBS.Txt("机房门口");
-        RadioButton4.Text = PUBS.Txt("侧面进线");
-        DetailsView1.Fields[0].HeaderText = PUBS.Txt("检测时间") + ":";
-        DetailsView1.Fields[1].HeaderText = PUBS.Txt("车组号") + ":";
-        DetailsView1.Fields[2].HeaderText = PUBS.Txt("进线速度") + ":";
-        DetailsView1.Fields[3].HeaderText = PUBS.Txt("离线速度") + ":";
-        //DetailsView1.Fields[4].HeaderText = PUBS.Txt("水温") + ":";
-        DetailsView1.Fields[4].HeaderText = PUBS.Txt("端位") + ":";
-        DetailsView1.Fields[5].HeaderText = PUBS.Txt("轴数") + ":";
-        LoginStatus1.LogoutText = PUBS.Txt("注销");
-        bt_compare.Text = PUBS.Txt("比对");
-        bt_updateCarNo.Text = PUBS.Txt("更新");
-        btTypical.Text = PUBS.Txt("锁定");
-        btNoTypical.Text = PUBS.Txt("解锁");
-
-        //地铁离线速度不显示，因为只有一个速度值，是从外形取的
-        if (PUBS.TYPE == "地铁")
-            DetailsView1.Fields[3].Visible = false;
-        var name = PUBS.GetUserDisplayName(Context.User.Identity.Name);
-        LoginName1.FormatString = name;
+       
     } 
 
     protected void Page_Load(object sender, EventArgs e)
@@ -183,9 +200,9 @@ public partial class Details_kc : System.Web.UI.Page
         if (Session["pre_detectorNo"] != null)
             Session.Remove("pre_detectorNo");
 
-        double d = (double)Application["video_forward"];
+        double d = (double)Session["video_forward"];
         D1 = m_dt.AddSeconds(-d).ToString("yyyy-MM-dd HH:mm:ss");
-        d = (double)Application["video_last"];
+        d = (double)Session["video_last"];
         D2 = m_dt.AddSeconds(d).ToString("yyyy-MM-dd HH:mm:ss");
         //D1 = "2012-08-31 11:27:15";
         //D2 = "2012-08-31 11:28:15";
@@ -299,7 +316,8 @@ public partial class Details_kc : System.Web.UI.Page
         string ret="";
         if (sValue == "-")
             return ret;
-        double value = double.Parse(sValue);
+        //出异常的地方，但是这个value在后面没有被引用，所以简单处理
+        //double value = double.Parse(sValue);
         int updown;
 
         string desc;

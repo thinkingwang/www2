@@ -161,14 +161,14 @@ insert into [trainType] (trainType,trainNoFrom,trainNoTo,format) values(@TrainTy
                         <ItemStyle ForeColor="Black" />
                 </asp:TemplateField>
                     <asp:CommandField HeaderText="编辑 " ShowEditButton="True" EditText="编缉" 
-                    CancelText="取消" UpdateText="更新" ItemStyle-ForeColor="#33CCFF" ShowDeleteButton="True"
+                    CancelText="取消" UpdateText="更新" ItemStyle-ForeColor="#33CCFF" ShowDeleteButton="True" DeleteText="删除"
                     ControlStyle-ForeColor="#33CCFF" >
                         <ControlStyle ForeColor="#33CCFF" />
                         <ItemStyle ForeColor="#33CCFF" />
                         </asp:CommandField> 
                          <asp:TemplateField HeaderText="详细" ShowHeader="False" >
                             <ItemTemplate>
-                                <asp:Button ID="checkBtn"  Text="查询" runat="server" CommandName="check" CommandArgument='<%# Bind("trainType")%>' />
+                                <asp:Button ID="checkBtn"  Text="查询" runat="server" CommandName="check" CommandArgument='<%# Eval("trainType")+","+Eval("trainNoFrom")+","+Eval("trainNoTo") %>' />
                             </ItemTemplate>
                         <ControlStyle ForeColor="#33CCFF" />
                         <ItemStyle ForeColor="#33CCFF" />

@@ -67,7 +67,7 @@ public partial class whms_wheel : System.Web.UI.Page
                         sInfor = "正常";
                 }
 
-                AddParameter("name", Application["SYS_NAME"].ToString());
+                AddParameter("name", Session["SYS_NAME"].ToString());
                 AddParameter("testDateTime", datetimestr);
                 AddParameter("trainInfo", trainInfo);
                 AddParameter("department", Session["Unit"].ToString());

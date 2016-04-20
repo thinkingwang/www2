@@ -20,10 +20,12 @@ public partial class DetectList : Page
         {
             ffUrl = Request.Url.ToString();
             ReloadIniFile();
-            //tb_bzh.Text = Application["BZH_Start"].ToString();
-            tbDelay.Text = Application["DelayMinute"].ToString();
-            tb_AxleNum.Text = Application["MinAxleNum"].ToString();
+            //tb_bzh.Text = Session["BZH_Start"].ToString();
+            tbDelay.Text = Session["DelayMinute"].ToString();
+            tb_AxleNum.Text = Session["MinAxleNum"].ToString();
+            Menu1.Attributes.Add("onclick","alert('123')");
         } 
+        
         if (Session["login"] == null)
             Response.Redirect(PUBS.HomePage);
 
@@ -49,8 +51,7 @@ public partial class DetectList : Page
         string strJB = PUBS.Txt("级别") + ":";
         string s1 = PUBS.Txt("I");
         string s2 = PUBS.Txt("II");
-        string s3 = PUBS.Txt("III");
-
+        string s3 = PUBS.Txt("III");        
         dl_all.Items[3].Text = strJB + s1;
         dl_all.Items[4].Text = strJB + s2;
         dl_all.Items[5].Text = strJB + s3;
@@ -101,11 +102,51 @@ public partial class DetectList : Page
             DropDownCalendar1.Text = DateTime.Today.ToString("yyyy-MM-dd");
             DropDownCalendar2.Text = DateTime.Today.ToString("yyyy-MM-dd");
             ViewState["sql1"] = PUBS.IniListDataSource(false);
-
-            //ViewState["sql1"] = string.Format("SELECT * FROM [V_Detect_kc] where engNum like '{0}%'  ORDER BY [testDateTime] DESC", Application["BZH_Start"].ToString());
+            var roles = Roles.GetRolesForUser();
+            var result = PUBS.GetRolePowerElements(roles[0]);
+            for (int i = 0; i < Menu2.Items[0].ChildItems.Count; i++)
+            {
+                var item = Menu2.Items[0].ChildItems[i];
+                if (result.Item1.Contains(item.Value))
+                {
+                    continue;
+                }
+                Menu2.Items[0].ChildItems.Remove(item);
+                i--;
+            }
+            for (int i = 0; i < Menu1.Items[0].ChildItems.Count; i++)
+            {
+                var item = Menu1.Items[0].ChildItems[i];
+                if (result.Item1.Contains(item.Value))
+                {
+                    continue;
+                }
+                Menu1.Items[0].ChildItems.Remove(item);
+                i--;
+            }
+            if (result != null)
+            {
+                foreach (var item in result.Item1)
+                {
+                    var element = this.FindControl(item);
+                    if (element != null)
+                    {
+                        element.Visible = true;
+                    }
+                }
+                foreach (var item in result.Item2)
+                {
+                    var element = this.FindControl(item);
+                    if (element != null)
+                    {
+                        element.Visible = false;
+                    }
+                }
+            }
+            //ViewState["sql1"] = string.Format("SELECT * FROM [V_Detect_kc] where engNum like '{0}%'  ORDER BY [testDateTime] DESC", Session["BZH_Start"].ToString());
             //ReloadIniFile();
         }
-        Session["alert"] = Application["BoGao_Alert"];
+        Session["alert"] = Session["BoGao_Alert"];
 
         //SqlDataSource1.FilterExpression = Convert.ToString(ViewState["sql1"]);
         if (Request.QueryString["bzh"] != null)
@@ -114,88 +155,65 @@ public partial class DetectList : Page
             SqlDataSource1.SelectCommand = Convert.ToString(ViewState["sql1"]);
 
 
-        GridView1.Columns[3].Visible = (bool)Application["SYS_TS"];
+        GridView1.Columns[3].Visible = (bool)Session["SYS_TS"];
 
-        GridView1.Columns[4].Visible = (bool)Application["SYS_CS"];
+        GridView1.Columns[4].Visible = (bool)Session["SYS_CS"];
 
-        GridView1.Columns[5].Visible = (bool)Application["SYS_WX"];
-        GridView1.Columns[6].Visible = (bool)Application["SYS_WX"];
-        GridView1.Columns[7].Visible = (bool)Application["SYS_WX"];
-        GridView1.Columns[8].Visible = (bool)Application["SYS_WX"];
-        GridView1.Columns[9].Visible = (bool)Application["SYS_WX"];
-        GridView1.Columns[10].Visible = (bool)Application["SYS_WX"];
-        GridView1.Columns[11].Visible = (bool)Application["SYS_WX"];
+        GridView1.Columns[5].Visible = (bool)Session["SYS_WX"];
+        GridView1.Columns[6].Visible = (bool)Session["SYS_WX"];
+        GridView1.Columns[7].Visible = (bool)Session["SYS_WX"];
+        GridView1.Columns[8].Visible = (bool)Session["SYS_WX"];
+        GridView1.Columns[9].Visible = (bool)Session["SYS_WX"];
+        GridView1.Columns[10].Visible = (bool)Session["SYS_WX"];
+        GridView1.Columns[11].Visible = (bool)Session["SYS_WX"];
         var name = PUBS.GetUserDisplayName(Context.User.Identity.Name);
         LoginName2.FormatString = name;
-        var roles = Roles.GetRolesForUser();
-        var result = PUBS.GetRolePowerElements(roles[0]);
-        if (result != null)
-        {
-            foreach (var item in result.Item1)
-            {
-                var element = this.FindControl(item);
-                if (element != null)
-                {
-                    element.Visible = true;
-                }
-            }
-            foreach (var item in result.Item2)
-            {
-                var element = this.FindControl(item);
-                if (element != null)
-                {
-                    element.Visible = false;
-                }
-            }
-        }
+       
     }
 
     private void ReloadIniFile()
     {
         IniFile ini = new IniFile(System.IO.Path.GetDirectoryName(Page.Request.PhysicalPath) + "\\tycho.ini");
-        Application.Lock();
-        Application.Set("double_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "double_red", "15")));
-        Application.Set("double_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "double_yellow", "30")));
-        Application.Set("single_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "single_red", "15")));
-        Application.Set("single_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "single_yellow", "30")));
-        Application.Set("angle_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "angle_red", "15")));
-        Application.Set("angle_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "angle_yellow", "30")));
-        Application.Set("BoGao_Alert", Convert.ToInt32(ini.IniReadValue("波高", "alert", "100")));
-        Application.Set("Detector_zj_num", Convert.ToInt32(ini.IniReadValue("探头", "zj", "21")));
-        Application.Set("Detector_double_num", (int)Application["Detector_zj_num"] * 4);
-        Application.Set("Detector_single_num", (int)Application["Detector_zj_num"] * 2);
-        Application.Set("Detector_angle_num", (int)Application["Detector_zj_num"] * 2);
-        Application.Set("DataPath", ini.IniReadValue("常规", "datapath", ""));
-        Application.Set("UnitName", ini.IniReadValue("常规", "unit", ""));
-        Application.Set("double_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "double_flag_offset", "0")));
-        Application.Set("single_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "single_flag_offset", "0")));
-        Application.Set("angle_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "angle_flag_offset", "0")));
-        Application.Set("Detector_double_len", Convert.ToInt32(ini.IniReadValue("探头", "double_len", "38")));
-        Application.Set("Detector_single_len", Convert.ToInt32(ini.IniReadValue("探头", "single_len", "76")));
-        Application.Set("Detector_angle_len", Convert.ToInt32(ini.IniReadValue("探头", "angle_len", "76")));
-        Application.Set("double_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "double_start_offset", "25")));
-        Application.Set("single_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "single_start_offset", "17")));
-        Application.Set("angle_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "angle_start_offset", "5")));
-        Application.Set("single_mode", Convert.ToInt32(ini.IniReadValue("探头", "single_mode", "0")));
-        Application.Set("video_forward", Convert.ToDouble(ini.IniReadValue("视频", "forward", "25")));
-        Application.Set("video_last", Convert.ToDouble(ini.IniReadValue("视频", "last", "25")));
-        Application.Set("whmsXmlDataPath", ini.IniReadValue("WHMS", "XmlDataPath", ""));
-        Application.Set("SYS_TS", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "TS", "false")));
-        Application.Set("SYS_TS_url", ini.IniReadValue("SYSTEM", "TS_URL", ""));
-        Application.Set("SYS_CS", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS", "false")));
-        Application.Set("SYS_CS_url", ini.IniReadValue("SYSTEM", "CS_URL", ""));
-        Application.Set("SYS_CS_IMAGE", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS_IMAGE", "false")));
-        Application.Set("SYS_WX", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "WX", "false")));
-        Application.Set("SYS_NAME", ini.IniReadValue("SYSTEM", "name", "轮对在线综合检测系统"));
-        Application.Set("SYS_MODE", ini.IniReadValue("SYSTEM", "mode", "8UT"));
-        Application.Set("BZH_Start", ini.IniReadValue("SYSTEM", "BZH_START", ""));
-        Application.Set("MinAxleNum", Convert.ToInt32(ini.IniReadValue("SYSTEM", "MinAxleNum", "1")));
-        Application.Set("URL_HXZY", ini.IniReadValue("HXZY", "url", ""));
-        Application.Set("DelayMinute", Convert.ToInt32(ini.IniReadValue("SYSTEM", "DelayMinute", "0")));
-        Application.Set("VideoPW", ini.IniReadValue("SYSTEM", "VideoPW", "12345"));
-        Application.Set("SYS_Have_Threshold_Config", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "ThresholdConfig", "false")));
-
-        Application.UnLock();
+        Session.Add("double_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "double_red", "15")));
+        Session.Add("double_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "double_yellow", "30")));
+        Session.Add("single_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "single_red", "15")));
+        Session.Add("single_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "single_yellow", "30")));
+        Session.Add("angle_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "angle_red", "15")));
+        Session.Add("angle_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "angle_yellow", "30")));
+        Session.Add("BoGao_Alert", Convert.ToInt32(ini.IniReadValue("波高", "alert", "100")));
+        Session.Add("Detector_zj_num", Convert.ToInt32(ini.IniReadValue("探头", "zj", "21")));
+        Session.Add("Detector_double_num", (int)Session["Detector_zj_num"] * 4);
+        Session.Add("Detector_single_num", (int)Session["Detector_zj_num"] * 2);
+        Session.Add("Detector_angle_num", (int)Session["Detector_zj_num"] * 2);
+        Session.Add("DataPath", ini.IniReadValue("常规", "datapath", ""));
+        Session.Add("UnitName", ini.IniReadValue("常规", "unit", ""));
+        Session.Add("double_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "double_flag_offset", "0")));
+        Session.Add("single_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "single_flag_offset", "0")));
+        Session.Add("angle_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "angle_flag_offset", "0")));
+        Session.Add("Detector_double_len", Convert.ToInt32(ini.IniReadValue("探头", "double_len", "38")));
+        Session.Add("Detector_single_len", Convert.ToInt32(ini.IniReadValue("探头", "single_len", "76")));
+        Session.Add("Detector_angle_len", Convert.ToInt32(ini.IniReadValue("探头", "angle_len", "76")));
+        Session.Add("double_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "double_start_offset", "25")));
+        Session.Add("single_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "single_start_offset", "17")));
+        Session.Add("angle_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "angle_start_offset", "5")));
+        Session.Add("single_mode", Convert.ToInt32(ini.IniReadValue("探头", "single_mode", "0")));
+        Session.Add("video_forward", Convert.ToDouble(ini.IniReadValue("视频", "forward", "25")));
+        Session.Add("video_last", Convert.ToDouble(ini.IniReadValue("视频", "last", "25")));
+        Session.Add("whmsXmlDataPath", ini.IniReadValue("WHMS", "XmlDataPath", ""));
+        Session.Add("SYS_TS", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "TS", "false")));
+        Session.Add("SYS_TS_url", ini.IniReadValue("SYSTEM", "TS_URL", ""));
+        Session.Add("SYS_CS", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS", "false")));
+        Session.Add("SYS_CS_url", ini.IniReadValue("SYSTEM", "CS_URL", ""));
+        Session.Add("SYS_CS_IMAGE", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS_IMAGE", "false")));
+        Session.Add("SYS_WX", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "WX", "false")));
+        Session.Add("SYS_NAME", ini.IniReadValue("SYSTEM", "name", "轮对在线综合检测系统"));
+        Session.Add("SYS_MODE", ini.IniReadValue("SYSTEM", "mode", "8UT"));
+        Session.Add("BZH_Start", ini.IniReadValue("SYSTEM", "BZH_START", ""));
+        Session.Add("MinAxleNum", Convert.ToInt32(ini.IniReadValue("SYSTEM", "MinAxleNum", "1")));
+        Session.Add("URL_HXZY", ini.IniReadValue("HXZY", "url", ""));
+        Session.Add("DelayMinute", Convert.ToInt32(ini.IniReadValue("SYSTEM", "DelayMinute", "0")));
+        Session.Add("VideoPW", ini.IniReadValue("SYSTEM", "VideoPW", "12345"));
+        Session.Add("SYS_Have_Threshold_Config", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "ThresholdConfig", "false")));
         string[] pos = ini.IniReadValue("WheelPos", "WheelPos", "①, ②, ③, ④, ⑤, ⑥, ⑦, ⑧").Split(',');
         if (pos.Length == 8)
         {
@@ -769,22 +787,28 @@ public partial class DetectList : Page
                 cell3.Text = "";
 
                 TableCell cell4 = theGrid.Rows[i].Cells[13];
-                if (cell4.Text == "本所")
+                if (cell4.Text == "本所"||cell4.Text=="本局")
                 {
 
                     cell4.Style.Value = "background-repeat: no-repeat; background-position: center center; background-image: url('image/our.gif')";
                 }
+                else if (cell4.Text == "本段")
+                {
+                    cell4.Style.Value =
+                        "background-repeat: no-repeat; background-position: center center; background-image: url('image/our1.gif')";
+                }
                 else
                 {
-                    cell4.Style.Value = "background-repeat: no-repeat; background-position: center center; background-image: url('image/others.gif')";
+                    cell4.Style.Value =
+                        "background-repeat: no-repeat; background-position: center center; background-image: url('image/others.gif')";
                 }
                 var btn = theGrid.Rows[i].Cells[17].FindControl("btnrecheck") as Button;
                 if (btn != null)
                 {
-                    var sql = string.Format("select count(*) from recheckTable where testDateTime='{0}'", s);
-                    var tb = PUBS.sqlQuery(string.Format("select count(*) from recheckTable where testDateTime='{0}'",s));
-                    var count = Convert.ToInt32(tb.Rows[0][0]);
-                    if (count > 0)
+                    var sql = string.Format("select dbo.[GetRecheckState]('{0}') as state", s);
+                    var tb = PUBS.sqlQuery(sql);
+                    var count = Convert.ToInt32(tb.Rows[0]["state"]);
+                    if (count ==1)
                     {
                         btn.Text = "已复核";
                     }
@@ -824,7 +848,7 @@ public partial class DetectList : Page
         curContext.Response.AppendHeader("Content-Disposition", "attachment;filename=" + FileName);
         curContext.Response.Charset = "UTF-8";
         curContext.Response.ContentEncoding = System.Text.Encoding.Default;
-        curContext.Response.ContentType = "application/ms-excel";
+        curContext.Response.ContentType = "Session/ms-excel";
 
         // 导出excel文件
         strWriter = new System.IO.StringWriter();
@@ -966,7 +990,7 @@ public partial class DetectList : Page
                     tc.Text = "轴数";
                     tcHeader.Add(tc);
 
-                    if ((bool)Application["SYS_TS"])
+                    if ((bool)Session["SYS_TS"])
                     {
                         tc = new TableHeaderCell();
                         tc.Attributes.Add("rowspan", "2"); //跨2行
@@ -974,7 +998,7 @@ public partial class DetectList : Page
                         tcHeader.Add(tc);
                     }
 
-                    if ((bool)Application["SYS_CS"])
+                    if ((bool)Session["SYS_CS"])
                     {
                         tc = new TableHeaderCell();
                         tc.Attributes.Add("rowspan", "2"); //跨2行
@@ -982,7 +1006,7 @@ public partial class DetectList : Page
                         tcHeader.Add(tc);
                     }
 
-                    if ((bool)Application["SYS_WX"])
+                    if ((bool)Session["SYS_WX"])
                     {
                         tc = new TableHeaderCell();
                         tc.Attributes.Add("colspan", "7"); //跨5列
@@ -1016,7 +1040,7 @@ public partial class DetectList : Page
                     tcHeader.Add(tc);
 
                     //添加二级表头
-                    if ((bool)Application["SYS_WX"])
+                    if ((bool)Session["SYS_WX"])
                     {
 
                         tc = new TableHeaderCell();
@@ -1120,6 +1144,11 @@ public partial class DetectList : Page
             default:
                 break;
         }
+    }
+
+    protected void bt_log_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/operateLog.aspx");
     }
 }
 

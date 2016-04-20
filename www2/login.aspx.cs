@@ -77,7 +77,7 @@ public partial class _Default : System.Web.UI.Page
         string unit = ini.IniReadValue("常规", "unit", "");
         Session.Add("Unit", unit);
         m_sUnitName = unit;// +" " + PUBS.Txt("车辆段");//"车辆段";department
-        Application["css"] = "css/tycho/tycho.css";
+        Session["css"] = "css/tycho/tycho.css";
         Login1.UserNameLabelText = PUBS.Txt("用户名");
         Login1.PasswordLabelText = PUBS.Txt("密码");
         //Login1.TitleText = PUBS.Txt("login"];
@@ -128,12 +128,11 @@ public partial class _Default : System.Web.UI.Page
         
         Session["screen_pix"] = Convert.ToInt32(screen_pix.Value);
 
-        PUBS.Log(Request.UserHostAddress, Login1.UserName, 1, "");
+        PUBS.Log(Request.UserHostAddress, Login1.UserName, 1, "登录系统");
         PUBS.LogVersion();
     }
     protected void Login1_LoginError(object sender, EventArgs e)
     {
-        PUBS.Log(Request.UserHostAddress, Login1.UserName, 101, "");
-        
+        PUBS.Log(Request.UserHostAddress, Login1.UserName, 101, "登录错误");
     }
 }

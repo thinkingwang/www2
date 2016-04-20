@@ -45,9 +45,13 @@
                 <asp:Label ID="lb_title" runat="server" Text="车厢类型配置"></asp:Label></span>
             </div>
             <span style="color: #FF3300">车型名称:</span>
-            <asp:TextBox ID="txt_trainType" runat="server" ToolTip="请输入新增车型的名称"></asp:TextBox>
+            <asp:TextBox ID="txt_trainType" runat="server" ToolTip="请输入新增车型的名称" Width="74px"></asp:TextBox>
             <span style="color: #FF3300">车厢节数:</span>
-            <asp:TextBox ID="txt_carNum" runat="server" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" ToolTip="请输入新增车厢节数"></asp:TextBox>
+            <asp:TextBox ID="txt_carNum" runat="server" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" ToolTip="请输入新增车厢节数" Width="74px"></asp:TextBox>
+            <span style="color: #FF3300">车号开始数字:</span>
+            <asp:TextBox ID="txt_startNo" runat="server" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" ToolTip="请输入车号开始数字" Width="74px"></asp:TextBox>
+            <span style="color: #FF3300">车号结束数字:</span>
+            <asp:TextBox ID="txt_endNo" runat="server" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" ToolTip="请输入车号结束数字" Width="74px"></asp:TextBox>
             <asp:Button ID="NewTrainBtn" runat="server" Text="增加车型"  AutoPostBack="True" OnClientClick="return checkTxt()" OnClick="NewTrainType_Click" />
             <asp:Button ID="DeleteTrainBtn" runat="server" Text="删除当前车型"  AutoPostBack="True" OnClick="DeleteTrainBtn_OnClick" />
                 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" 
@@ -67,10 +71,18 @@
                         <ItemStyle ForeColor="Black" />
                         </asp:BoundField>
                         <asp:BoundField DataField="carNo" HeaderText="车厢编号">
+                        <ItemStyle ForeColor="Black"/>
+                            <ControlStyle Width="100%" />
+                        </asp:BoundField>
+                        <asp:BoundField DataField="trainNoFrom" HeaderText="车号开始数字" ReadOnly="True" >
+                        <ItemStyle ForeColor="Black" />
+                        </asp:BoundField>
+                        <asp:BoundField DataField="trainNoTo" HeaderText="车号结束数字" ReadOnly="True" >
                         <ItemStyle ForeColor="Black" />
                         </asp:BoundField>
                         <asp:BoundField DataField="axleType" HeaderText="轴类型" ItemStyle-Width="50" >
                         <ItemStyle ForeColor="Black" />
+                            <ControlStyle Width="100%" />
                         </asp:BoundField>
                         <asp:CheckBoxField DataField="dir" HeaderText="方向" />
                         <asp:TemplateField HeaderText="车厢类型">

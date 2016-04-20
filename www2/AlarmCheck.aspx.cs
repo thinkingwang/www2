@@ -23,17 +23,15 @@ public partial class Verify : System.Web.UI.Page
     {
         if (Session["login"] == null)
             Response.Redirect(PUBS.HomePage);
-        if (PUBS.GetUserLevel() > 1)
-        {
-            Response.Write("<script>alert(\'无权限\');</script>");
-            Response.Redirect(PUBS.HomePage);
-        }
         var name = PUBS.GetUserDisplayName(Context.User.Identity.Name);
         LoginName2.FormatString = name;
         if (!Page.IsPostBack)
         {
             datepickerEnd.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             datepickerStart.Text = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd HH:mm:ss");
+            Panel1.Visible = false;
+            Panel2.Visible = false;
+            Panel3.Visible = false;
         }
         ScriptManager.RegisterStartupScript(Page, typeof(string), "reload", "reload();", true);
     }
@@ -121,10 +119,21 @@ public partial class Verify : System.Web.UI.Page
 
     private void Check()
     {
+        GridView1.DataSource = null;
+        Panel1.Visible = false;
+        GridView1.DataBind();
+        GridView2.DataSource = null;
+        Panel2.Visible = false;
+        GridView2.DataBind();
+        GridView3.DataSource = null;
+        Panel3.Visible = false;
+        GridView3.DataBind();
         var engNum = DropDownList1.Text;
         var alarmLevel = DropDownList4.Text;
         var startTime = datepickerStart.Text;
         var endTime = datepickerEnd.Text;
+        var carNo = DropDownList3.Text == "全部" ? "All" : DropDownList3.Text;
+        var wheelPos = DropDownList2.Text == "全部" ? "All" : DropDownList2.SelectedValue;
         if (string.IsNullOrEmpty(startTime) || string.IsNullOrEmpty(endTime))
         {
             ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "alert",
@@ -133,56 +142,113 @@ public partial class Verify : System.Web.UI.Page
         }
         var itemsProfiles = from ListItem item in CheckBoxList1.Items
                             where item.Selected
-                            select new Tuple<string, string>(item.Text, item.Value);
+                            select item.Text;
         var itemsCaShangs = from ListItem item in CheckBoxList2.Items
                             where item.Selected
-                            select new Tuple<string, string>(item.Text, item.Value);
+                            select item.Text;
         var itemsTanShangs = from ListItem item in CheckBoxList3.Items
                              where item.Selected
-                             select new Tuple<string, string>(item.Text, item.Value);
-        StringBuilder profileFields = new StringBuilder();
-        StringBuilder csFields = new StringBuilder();
-        StringBuilder tsFields = new StringBuilder();
-        foreach (Tuple<string, string> profile in itemsProfiles)
+                             select item.Text;
+        var enumerable = itemsProfiles as IList<string> ?? itemsProfiles.ToList();
+        if (enumerable.Any())
         {
-            profileFields.Append(profile.Item1 + '&' + profile.Item2 + '$');
+            Panel1.Visible = true;
+            StringBuilder profileFields = new StringBuilder();
+            foreach (string profile in enumerable)
+            {
+                profileFields.Append(profile);
+            }
+            //外形报警数据绑定
+            var sql = string.Format("exec dbo.GetAlarmDataForWaiXing '{0}' ,'{1}','{2}','{3}','{4}','{5}','{6}'",
+                startTime,
+                endTime, engNum, carNo, wheelPos, alarmLevel, profileFields);
+            var tbWaixing =
+                PUBS.sqlQuery(string.Format(
+                    "exec dbo.GetAlarmDataForWaiXing '{0}' ,'{1}','{2}','{3}','{4}','{5}','{6}'", startTime,
+                    endTime, engNum, carNo, wheelPos, alarmLevel, profileFields));
+            if (tbWaixing != null && GridView1.Columns.Count <= 1)
+            {
+                foreach (DataColumn c in tbWaixing.Columns)
+                {
+                    if (c.ColumnName == "轴号"||c.ColumnName=="轮号")
+                    {
+                        continue;
+                    }
+                    BoundField cc = new BoundField(); //或者 CheckBoxField()
+                    cc.HeaderText = c.ColumnName;
+                    cc.DataField = c.ColumnName;
+                    GridView1.Columns.Insert(GridView1.Columns.Count - 1, cc);
+                }
+                GridView1.DataKeyNames = new[] { "轴号", "轮号" };
+            }
+            GridView1.DataSource = tbWaixing;
+            GridView1.DataBind();
         }
-        foreach (Tuple<string, string> profile in itemsCaShangs)
+        if (itemsCaShangs.Any())
         {
-            csFields.Append(profile.Item1 + '&' + profile.Item2 + '$');
+            Panel3.Visible = true;
+            //擦伤报警数据绑定
+            var caTanshang = PUBS.sqlQuery(string.Format("exec dbo.GetAlarmDataForCaShang '{0}' ,'{1}','{2}','{3}','{4}','{5}'", startTime,
+                endTime, engNum, carNo, wheelPos, alarmLevel));
+            if (caTanshang != null && GridView3.Columns.Count <= 1)
+                {
+                    foreach (DataColumn c in caTanshang.Columns)
+                    {
+                        if (c.ColumnName == "轴号" || c.ColumnName == "轮号")
+                        {
+                            continue;
+                        }
+                        BoundField cc = new BoundField(); //或者 CheckBoxField()
+                        cc.HeaderText = c.ColumnName;
+                        cc.DataField = c.ColumnName;
+                        GridView3.Columns.Insert(GridView3.Columns.Count - 1, cc);
+                    }
+                }
+            GridView3.DataKeyNames = new[] { "轴号", "轮号" };
+            GridView3.DataSource = caTanshang;
+            GridView3.DataBind();
         }
-        foreach (Tuple<string, string> profile in itemsTanShangs)
+        if (itemsTanShangs.Any())
         {
-            tsFields.Append(profile.Item1 + '&' + profile.Item2 + '$');
+            Panel2.Visible = true;
+            //探伤报警数据绑定
+            var tbTanshang = PUBS.sqlQuery(string.Format("exec dbo.GetAlarmDataForTanShang '{0}' ,'{1}','{2}','{3}','{4}','{5}'", startTime,
+                endTime, engNum, carNo, wheelPos, alarmLevel));
+            if (tbTanshang != null && GridView2.Columns.Count <= 1)
+            {
+                foreach (DataColumn c in tbTanshang.Columns)
+                {
+                    if (c.ColumnName == "轴号" || c.ColumnName == "轮号")
+                    {
+                        continue;
+                    }
+                    BoundField cc = new BoundField(); //或者 CheckBoxField()
+                    cc.HeaderText = c.ColumnName;
+                    cc.DataField = c.ColumnName;
+                    GridView2.Columns.Insert(GridView2.Columns.Count - 1, cc);
+                }
+                GridView2.DataKeyNames = new[] { "轴号", "轮号" };
+            }
+            GridView2.DataSource = tbTanshang;
+            GridView2.DataBind();
         }
-        if (profileFields.Length > 0)
-        {
-            profileFields.Remove(profileFields.Length - 1, 1);
-        }
-        if (csFields.Length > 0)
-        {
-            csFields.Remove(csFields.Length - 1, 1);
-        }
-        if (tsFields.Length > 0)
-        {
-            tsFields.Remove(tsFields.Length - 1, 1);
-        }
-        var carNo = DropDownList3.Text == "全部" ? "All" : DropDownList3.Text;
-        var wheelPos = DropDownList2.Text == "全部" ? "All" : DropDownList2.SelectedValue;
-        var sql = string.Format("exec dbo.GetAlarmData '{0}' ,'{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}'", startTime, endTime,
-            engNum, carNo, wheelPos, alarmLevel, profileFields, csFields, tsFields);
-        //SqlDataSource1.SelectCommand = sql;
-        //SqlDataSource1.DataBind();
 
-        var tb = PUBS.sqlQuery(string.Format("exec dbo.GetAlarmData '{0}' ,'{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}'", startTime,
-            endTime, engNum, carNo, wheelPos, alarmLevel, profileFields, csFields, tsFields));
-        GridView1.DataSource = tb;
-        GridView1.DataBind();
     }
     protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         var a = GridView1.PageIndex;
         var b = GridView1.PageSize;
+    }
+    private int GetIndexOfColumn(GridView gv,string fieldName)
+    {
+        foreach (DataControlField column in gv.Columns)
+        {
+            if (column.HeaderText == fieldName)
+            {
+                return gv.Columns.IndexOf(column);
+            }
+        }
+        throw  new Exception("GridView表不存在该列");
     }
 
     private void BindCarNo()
@@ -336,5 +402,156 @@ public partial class Verify : System.Web.UI.Page
                 }
             }
         }
+    }
+
+
+    protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        var gv = e.CommandSource as GridView;
+        if (gv == null)
+        {
+            return;
+        }
+        var row = gv.Rows[Convert.ToInt32(e.CommandArgument)];
+        var commPara = "&advice=" + row.Cells[GetIndexOfColumn(gv, "处理意见")].Text + "&desc=" + row.Cells[GetIndexOfColumn(gv, "处理结论")].Text + "&recheckPerson=" + row.Cells[GetIndexOfColumn(gv, "复核人")].Text + "&recheckOperator=" +
+                       row.Cells[GetIndexOfColumn(gv, "处理人")].Text;
+
+        int wheelPos;
+        switch (row.Cells[GetIndexOfColumn(gv, "检测项")].Text)
+        {
+            case "同轴轮径差":
+                wheelPos = Convert.ToInt32(row.Cells[GetIndexOfColumn(gv, "位置")].Text.TrimEnd('轴'));
+                Response.Redirect("checkLjcha_zhou.aspx?testDateTime=" + row.Cells[1].Text + "&carNo=" +
+                                  row.Cells[GetIndexOfColumn(gv, "车厢号")].Text + "&axlePos=" + wheelPos + commPara);
+                break;
+            case "内侧距":
+                wheelPos = Convert.ToInt32(row.Cells[GetIndexOfColumn(gv, "位置")].Text.TrimEnd('轴'));
+                Response.Redirect("checkWaiXingSimple.aspx?testDateTime=" + row.Cells[GetIndexOfColumn(gv, "检测时间")].Text + "&checkItem=" + row.Cells[GetIndexOfColumn(gv, "检测项")].Text + "&carNo=" +
+                                  row.Cells[GetIndexOfColumn(gv, "车厢号")].Text + "&wheelPos=" + wheelPos + commPara);
+                break;
+            case "同转向架轮径差":
+                var zxj = Convert.ToInt32(row.Cells[GetIndexOfColumn(gv, "位置")].Text.ElementAt(0).ToString());
+                Response.Redirect("checkLjcha_zxj.aspx?testDateTime=" + row.Cells[GetIndexOfColumn(gv, "检测时间")].Text + "&carNo=" +
+                                  row.Cells[GetIndexOfColumn(gv, "车厢号")].Text + "&zxj=" + zxj + commPara);
+                break;
+            case "同车轮径差":
+                Response.Redirect("checkLjcha_che.aspx?testDateTime=" + row.Cells[GetIndexOfColumn(gv, "检测时间")].Text + "&carNo=" +
+                                  row.Cells[GetIndexOfColumn(gv, "车厢号")].Text + commPara);
+                break;
+            case "整车差":
+                Response.Redirect("checkLjcha_bz.aspx?testDateTime=" + row.Cells[GetIndexOfColumn(gv, "检测时间")].Text + commPara);
+                break;
+            default:
+                wheelPos = Convert.ToInt32(row.Cells[GetIndexOfColumn(gv, "位置")].Text.TrimEnd('位'));
+                Response.Redirect("checkWaiXingSimple.aspx?testDateTime=" + row.Cells[GetIndexOfColumn(gv, "检测时间")].Text + "&checkItem=" + row.Cells[GetIndexOfColumn(gv, "检测项")].Text + "&carNo=" +
+                                  row.Cells[GetIndexOfColumn(gv, "车厢号")].Text + "&wheelPos=" + wheelPos + commPara);
+                break;
+        }
+
+    }
+
+    protected void GridView2_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        var gv = e.CommandSource as GridView;
+        if (gv == null)
+        {
+            return;
+        }
+        var row = gv.Rows[Convert.ToInt32(e.CommandArgument)];
+        if (gv.DataKeys[row.RowIndex] == null)
+        {
+            ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "alert", "alert('" + "该数据才数据库检索失败" + "');", true);
+            return;
+        }
+        var wheelNo = gv.DataKeys[row.RowIndex]["轮号"];
+        var axleNo = gv.DataKeys[row.RowIndex]["轴号"];
+        var commPara = "&advice=" + row.Cells[GetIndexOfColumn(gv, "处理意见")].Text + "&desc=" + row.Cells[GetIndexOfColumn(gv, "处理结论")].Text + "&recheckPerson=" + row.Cells[GetIndexOfColumn(gv, "复核人")].Text + "&recheckOperator=" +
+                       row.Cells[GetIndexOfColumn(gv, "处理人")].Text;
+        Response.Redirect("checkTanShang.aspx?testDateTime=" + row.Cells[GetIndexOfColumn(gv, "检测时间")].Text + "&carNo=" +
+                          row.Cells[GetIndexOfColumn(gv, "车厢号")].Text + "&axleNo=" +
+                          axleNo + "&wheelNo=" + wheelNo + "&wheelPos=" + row.Cells[GetIndexOfColumn(gv, "位置")].Text.TrimEnd('位') + commPara);
+
+
+    }
+    protected void GridView3_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        var gv = e.CommandSource as GridView;
+        if (gv == null)
+        {
+            return;
+        }
+        var row = gv.Rows[Convert.ToInt32(e.CommandArgument)];
+        var commPara = "&advice=" + row.Cells[GetIndexOfColumn(gv, "处理意见")].Text + "&desc=" + row.Cells[GetIndexOfColumn(gv, "处理结论")].Text + "&recheckPerson=" + row.Cells[GetIndexOfColumn(gv, "复核人")].Text + "&recheckOperator=" +
+                       row.Cells[GetIndexOfColumn(gv, "处理人")].Text;
+        Response.Redirect("checkCaShang.aspx?testDateTime=" + row.Cells[GetIndexOfColumn(gv, "检测时间")].Text + "&carNo=" +
+                          row.Cells[GetIndexOfColumn(gv, "车厢号")].Text + "&wheelPos=" + row.Cells[GetIndexOfColumn(gv, "位置")].Text.TrimEnd('位') + commPara);
+
+    }
+    
+
+    protected void btn_display_OnClick(object sender, EventArgs e)
+    {
+        if (btn_display.Text == "隐藏")
+        {
+            btn_display.Text = "显示";
+            GridView1.Visible = false;
+            return;
+        }
+        btn_display.Text = "隐藏";
+        GridView1.Visible = true;
+    }
+
+    protected void btn_displayForTanShang_OnClick(object sender, EventArgs e)
+    {
+        if (btn_displayForTanShang.Text == "隐藏")
+        {
+            btn_displayForTanShang.Text = "显示";
+            GridView2.Visible = false;
+            return;
+        }
+        btn_displayForTanShang.Text = "隐藏";
+        GridView2.Visible = true;
+    }
+
+    protected void btn_downloadTanShang_OnClick(object sender, EventArgs e)
+    {
+        if (GridView1.Rows.Count > 0)
+        {
+            //调用导出方法  
+            ExportGridViewForUTF8(GridView2, DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xls");
+        }
+        else
+        {
+            ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "alert", "alert('" + "没有数据可导出，请先查询数据!" + "');", true);
+
+            //obo.Common.MessageBox.Show(this, "没有数据可导出，请先查询数据!");
+        }
+    }
+
+    protected void btn_downloadCaShang_OnClick(object sender, EventArgs e)
+    {
+        if (GridView3.Rows.Count > 0)
+        {
+            //调用导出方法  
+            ExportGridViewForUTF8(GridView3, DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".xls");
+        }
+        else
+        {
+            ScriptManager.RegisterClientScriptBlock(this.Page, this.GetType(), "alert", "alert('" + "没有数据可导出，请先查询数据!" + "');", true);
+
+            //obo.Common.MessageBox.Show(this, "没有数据可导出，请先查询数据!");
+        }
+    }
+
+    protected void btn_displayForCaShang_OnClick(object sender, EventArgs e)
+    {
+        if (btn_displayForCaShang.Text == "隐藏")
+        {
+            btn_displayForCaShang.Text = "显示";
+            GridView3.Visible = false;
+            return;
+        }
+        btn_displayForCaShang.Text = "隐藏";
+        GridView3.Visible = true;
     }
 }

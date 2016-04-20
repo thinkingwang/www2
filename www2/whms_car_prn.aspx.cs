@@ -54,7 +54,7 @@ public partial class whms_wheel : System.Web.UI.Page
             {
                 prn = (PrnWhmsWheel)Session["PrnWhmsWheel"];
 
-                ReportParameter rptPara0 = new ReportParameter("name", Application["SYS_NAME"].ToString());
+                ReportParameter rptPara0 = new ReportParameter("name", Session["SYS_NAME"].ToString());
                 ReportParameter rptPara1 = new ReportParameter("testDateTime", prn.testDateTime);
                 ReportParameter rptPara2 = new ReportParameter("trainInfo", prn.trainInfo);
                 ReportParameter rptPara3 = new ReportParameter("carInfo", prn.carInfo);

@@ -7,6 +7,17 @@
 <title>机车车轮在线检测装置  用户创建</title>
 <link href="../css/tycho/tycho.css" type="text/css" rel="stylesheet"/>
 </head>
+    <script>
+        // 点击复选框时触发事件
+        function postBackByObject() {
+            var o = window.event.srcElement;
+            if (o.tagName === "INPUT" && o.type === "checkbox") {
+                __doPostBack("", "");
+            }
+
+        }
+
+    </script>
 <body>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server">
@@ -25,8 +36,6 @@
         <asp:LoginName ID="LoginName2" runat="server" SkinID="LoginName1" />
         <asp:LoginStatus ID="LoginStatus2" runat="server"  LogoutAction="RedirectToLoginPage" 
             SkinID="LoginStatus1" onloggedout="LoginStatus2_LoggedOut" />
-        <asp:Button ID="bt_need" runat="server" Text="创建用户" onclick="bt_need_Click" />
-        <asp:Button ID="createRoleBtn" runat="server" Text="角色管理" onclick="createRole_Click" />
         <asp:Button ID="bt_back" runat="server" Text="返回" OnClientClick="javascript:history.go(-1);return false;" />
     </div>
     <div class ="user_manage">
@@ -50,6 +59,7 @@
                     <asp:ListItem>9级</asp:ListItem>
                     <asp:ListItem>10级</asp:ListItem>
                 </asp:DropDownList>
+                <asp:XmlDataSource ID="XmlDataSource1" runat="server"></asp:XmlDataSource>
                 <br/>
                 <asp:Label ID="lb_desc" runat="server">描述:</asp:Label>
                 <asp:TextBox ID="txt_desc" runat="server"></asp:TextBox>
@@ -58,22 +68,29 @@
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>
                   <asp:Panel runat="server" HorizontalAlign="Left">    
-                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1">
-                        <Columns>
-                            <asp:TemplateField HeaderText="序号">
-                            <ItemTemplate>
-                                <%# Container.DataItemIndex + 1%>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                            <asp:BoundField DataField="Name" HeaderText="功能" ReadOnly="True" SortExpression="Name" />
-                            <asp:TemplateField HeaderText="授权" >
-                            <ItemTemplate>
-                                <asp:CheckBox ID="isAllowed"  runat="server"  Checked='<%# Convert.ToInt32(Eval("isAllowed")) != 0 %>' 
-                                        Enabled="true"/>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
+                      <asp:TreeView ID="TreeView1" runat="server" ForeColor="#CCFFFF" OnTreeNodeCheckChanged="TreeView1_TreeNodeCheckChanged">
+                          <Nodes>
+                              <asp:TreeNode  Text="权限" Value="权限">
+                                  <asp:TreeNode  Text="权限管理" Value="bt_user"></asp:TreeNode>
+                                  <asp:TreeNode  Text="综合配置" Value="Menu2">
+                                      <asp:TreeNode  Text="门限配置" Value="manageThreshold"></asp:TreeNode>
+                                      <asp:TreeNode  Text="车组配置" Value="manageTrain"></asp:TreeNode>
+                                      <asp:TreeNode  Text="车型配置" Value="manageCar"></asp:TreeNode>
+                                  </asp:TreeNode>
+                                  <asp:TreeNode  Text="查询" Value="Menu1">
+                                      <asp:TreeNode  Text="综合查询" Value="zongheCheck"></asp:TreeNode>
+                                      <asp:TreeNode  Text="历史查询" Value="checkHistory"></asp:TreeNode>
+                                      <asp:TreeNode  Text="超限查询" Value="CheckAlarm"></asp:TreeNode>
+                                  </asp:TreeNode>
+                                  <asp:TreeNode  Text="校验管理" Value="bt_Verify"></asp:TreeNode>
+                                  <asp:TreeNode  Text="探伤开关" Value="btSwitch"></asp:TreeNode>
+                                  <asp:TreeNode  Text="数据下载" Value="btSaveExcel"></asp:TreeNode>
+                                  <asp:TreeNode  Text="轮径维护" Value="btEditEngine"></asp:TreeNode>
+                                  <asp:TreeNode  Text="数据刷新" Value="btRefresh"></asp:TreeNode>
+                                  <asp:TreeNode Text="操作日志" Value="bt_log"></asp:TreeNode>
+                              </asp:TreeNode>
+                          </Nodes>
+                      </asp:TreeView>
                 </div>
               </asp:Panel>
             </ContentTemplate>

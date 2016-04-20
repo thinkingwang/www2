@@ -44,24 +44,24 @@ public partial class status : Page
             ViewState["sql1"] = "SELECT * FROM [V_Detect_kc_outline] where bzh like 'CRH%'  ORDER BY [testDateTime] DESC";
             ReloadIniFile();
         }
-        Session["alert"] = Application["BoGao_Alert"];
+        Session["alert"] = Session["BoGao_Alert"];
 
         //SqlDataSource1.FilterExpression = Convert.ToString(ViewState["sql1"]);
         SqlDataSource1.SelectCommand = Convert.ToString(ViewState["sql1"]);
 
 
-        GridView1.Columns[3].Visible = (bool)Application["SYS_TS"];
+        GridView1.Columns[3].Visible = (bool)Session["SYS_TS"];
 
-        GridView1.Columns[4].Visible = (bool)Application["SYS_CS"];
+        GridView1.Columns[4].Visible = (bool)Session["SYS_CS"];
 
-        GridView1.Columns[5].Visible = (bool)Application["SYS_WX"];
+        GridView1.Columns[5].Visible = (bool)Session["SYS_WX"];
 
         RefreshZhData();
         Refresh1Data();
         Refresh2Data();
         //延时显示结果
         int iDelay = 0;
-        int.TryParse(Application["DelayMinute"].ToString(), out iDelay);
+        int.TryParse(Session["DelayMinute"].ToString(), out iDelay);
         if (iDelay > 0)
             //1.时间符合　2.强制放行　3.单轮对　4.全部正常
             SqlDataSource1.SelectCommand = string.Format("SELECT * FROM [V_Detect_kc_outline] where (testdatetime <dateadd(minute, -{0}, getdate())) or (isShow=1) or (AxleNum=1) or (s_level_ts='正常' and s_level_cs='正常' and s_level_M='正常') ORDER BY [testDateTime] DESC", iDelay);
@@ -70,43 +70,41 @@ public partial class status : Page
     private void ReloadIniFile()
     {
         IniFile ini = new IniFile(System.IO.Path.GetDirectoryName(Page.Request.PhysicalPath) + "\\tycho.ini");
-        Application.Lock();
-        Application.Set("double_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "double_red", "15")));
-        Application.Set("double_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "double_yellow", "30")));
-        Application.Set("single_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "single_red", "15")));
-        Application.Set("single_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "single_yellow", "30")));
-        Application.Set("angle_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "angle_red", "15")));
-        Application.Set("angle_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "angle_yellow", "30")));
-        Application.Set("BoGao_Alert", Convert.ToInt32(ini.IniReadValue("波高", "alert", "100")));
-        Application.Set("Detector_zj_num", Convert.ToInt32(ini.IniReadValue("探头", "zj", "21")));
-        Application.Set("Detector_double_num", (int)Application["Detector_zj_num"] * 4);
-        Application.Set("Detector_single_num", (int)Application["Detector_zj_num"] * 2);
-        Application.Set("Detector_angle_num", (int)Application["Detector_zj_num"] * 2);
-        Application.Set("DataPath", ini.IniReadValue("常规", "datapath", ""));
-        Application.Set("UnitName", ini.IniReadValue("常规", "unit", ""));
-        Application.Set("double_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "double_flag_offset", "0")));
-        Application.Set("single_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "single_flag_offset", "0")));
-        Application.Set("angle_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "angle_flag_offset", "0")));
-        Application.Set("Detector_double_len", Convert.ToInt32(ini.IniReadValue("探头", "double_len", "38")));
-        Application.Set("Detector_single_len", Convert.ToInt32(ini.IniReadValue("探头", "single_len", "76")));
-        Application.Set("Detector_angle_len", Convert.ToInt32(ini.IniReadValue("探头", "angle_len", "76")));
-        Application.Set("double_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "double_start_offset", "25")));
-        Application.Set("single_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "single_start_offset", "17")));
-        Application.Set("angle_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "angle_start_offset", "5")));
-        Application.Set("single_mode", Convert.ToInt32(ini.IniReadValue("探头", "single_mode", "0")));
-        Application.Set("video_forward", Convert.ToDouble(ini.IniReadValue("视频", "forward", "25")));
-        Application.Set("video_last", Convert.ToDouble(ini.IniReadValue("视频", "last", "25")));
-        Application.Set("whmsXmlDataPath", ini.IniReadValue("WHMS", "XmlDataPath", ""));
-        Application.Set("SYS_TS", Convert.ToBoolean(ini.IniReadValue("SYSTEM","TS", "false")));
-        Application.Set("SYS_CS", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS", "false")));
-        Application.Set("SYS_CS_IMAGE", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS_IMAGE", "false")));
-        Application.Set("SYS_WX", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "WX", "false")));
-        Application.Set("SYS_MODE", ini.IniReadValue("SYSTEM", "mode", "8UT"));
-        Application.Set("SYS_NAME", ini.IniReadValue("SYSTEM", "name", "轮对在线综合检测系统"));
-        Application.Set("URL_HXZY", ini.IniReadValue("HXZY", "url", ""));
-        Application.Set("ScDeep", Convert.ToInt32(ini.IniReadValue("SYSTEM", "ScDeep", "0")));
-        Application.Set("DelayMinute", Convert.ToInt32(ini.IniReadValue("SYSTEM", "DelayMinute", "0"))); 
-        Application.UnLock();
+        Session.Add("double_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "double_red", "15")));
+        Session.Add("double_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "double_yellow", "30")));
+        Session.Add("single_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "single_red", "15")));
+        Session.Add("single_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "single_yellow", "30")));
+        Session.Add("angle_BoGao_Red", Convert.ToInt32(ini.IniReadValue("波高", "angle_red", "15")));
+        Session.Add("angle_BoGao_Yellow", Convert.ToInt32(ini.IniReadValue("波高", "angle_yellow", "30")));
+        Session.Add("BoGao_Alert", Convert.ToInt32(ini.IniReadValue("波高", "alert", "100")));
+        Session.Add("Detector_zj_num", Convert.ToInt32(ini.IniReadValue("探头", "zj", "21")));
+        Session.Add("Detector_double_num", (int)Session["Detector_zj_num"] * 4);
+        Session.Add("Detector_single_num", (int)Session["Detector_zj_num"] * 2);
+        Session.Add("Detector_angle_num", (int)Session["Detector_zj_num"] * 2);
+        Session.Add("DataPath", ini.IniReadValue("常规", "datapath", ""));
+        Session.Add("UnitName", ini.IniReadValue("常规", "unit", ""));
+        Session.Add("double_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "double_flag_offset", "0")));
+        Session.Add("single_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "single_flag_offset", "0")));
+        Session.Add("angle_flag_offset", Convert.ToInt32(ini.IniReadValue("探头", "angle_flag_offset", "0")));
+        Session.Add("Detector_double_len", Convert.ToInt32(ini.IniReadValue("探头", "double_len", "38")));
+        Session.Add("Detector_single_len", Convert.ToInt32(ini.IniReadValue("探头", "single_len", "76")));
+        Session.Add("Detector_angle_len", Convert.ToInt32(ini.IniReadValue("探头", "angle_len", "76")));
+        Session.Add("double_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "double_start_offset", "25")));
+        Session.Add("single_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "single_start_offset", "17")));
+        Session.Add("angle_start_offset", Convert.ToDouble(ini.IniReadValue("探头", "angle_start_offset", "5")));
+        Session.Add("single_mode", Convert.ToInt32(ini.IniReadValue("探头", "single_mode", "0")));
+        Session.Add("video_forward", Convert.ToDouble(ini.IniReadValue("视频", "forward", "25")));
+        Session.Add("video_last", Convert.ToDouble(ini.IniReadValue("视频", "last", "25")));
+        Session.Add("whmsXmlDataPath", ini.IniReadValue("WHMS", "XmlDataPath", ""));
+        Session.Add("SYS_TS", Convert.ToBoolean(ini.IniReadValue("SYSTEM","TS", "false")));
+        Session.Add("SYS_CS", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS", "false")));
+        Session.Add("SYS_CS_IMAGE", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "CS_IMAGE", "false")));
+        Session.Add("SYS_WX", Convert.ToBoolean(ini.IniReadValue("SYSTEM", "WX", "false")));
+        Session.Add("SYS_MODE", ini.IniReadValue("SYSTEM", "mode", "8UT"));
+        Session.Add("SYS_NAME", ini.IniReadValue("SYSTEM", "name", "轮对在线综合检测系统"));
+        Session.Add("URL_HXZY", ini.IniReadValue("HXZY", "url", ""));
+        Session.Add("ScDeep", Convert.ToInt32(ini.IniReadValue("SYSTEM", "ScDeep", "0")));
+        Session.Add("DelayMinute", Convert.ToInt32(ini.IniReadValue("SYSTEM", "DelayMinute", "0"))); 
     }
 
 
@@ -275,7 +273,7 @@ public partial class status : Page
             {
                 byte[] datas = Convert.FromBase64String(strDatas);
                 ZhParam zh = new ZhParam(datas);
-                zh.scDeep = (int)Application["ScDeep"];
+                zh.scDeep = (int)Session["ScDeep"];
                 lb_SysStatus.Text = zh.SysStatus;
                 lb_Mode.Text = zh.Mode;
                 lb_IsOnline.Text = zh.IsOnLine;
@@ -344,7 +342,7 @@ public partial class status : Page
 
             //仪器状态
             strDatas = dt.Rows[0]["device"].ToString();
-            if (Application["SYS_MODE"].ToString() == "12UT")
+            if (Session["SYS_MODE"].ToString() == "12UT")
             {
                 if (strDatas.Length == 25)
                 {

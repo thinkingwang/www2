@@ -41,7 +41,7 @@ public partial class whms_wheel : System.Web.UI.Page
         if (dt.Rows.Count == 0)
             Response.Redirect("nofile.html");
         DateTime dtTest = (DateTime)dt.Rows[0]["whmsTime"];
-        xmlDataPath = string.Format("{0}\\{1}", Application["whmsXmlDataPath"], dtTest.ToString("yyyyMMdd_HHmmss")); //@"E:\tycho\P807\INSTALLER\doc";
+        xmlDataPath = string.Format("{0}\\{1}", Session["whmsXmlDataPath"], dtTest.ToString("yyyyMMdd_HHmmss")); //@"E:\tycho\P807\INSTALLER\doc";
         axleNo = int.Parse(Request.QueryString["axleNo"]);
         carNo = axleNo/4 + 1;
         axleNoInCar = axleNo%4 + 1;

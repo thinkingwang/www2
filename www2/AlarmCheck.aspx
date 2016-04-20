@@ -91,7 +91,7 @@ z-index:1000;
                 <asp:Label ID="lb_checkTitle" runat="server" Text="查询条件"></asp:Label></span>
             </div>
             
-             <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+             <asp:UpdatePanel ID="UpdatePanel2" UpdateMode="Conditional" runat="server">
 
              <ContentTemplate>
             <asp:Panel ID="check_panel"  runat="server" HorizontalAlign="Left">
@@ -106,21 +106,21 @@ z-index:1000;
                         <asp:Label ID="lb_alarmState" runat="server" Text="报警级别："></asp:Label>
                         <asp:DropDownList ID="DropDownList4" runat="server" DataTextField="carNo">
                             <asp:ListItem Value="All">全部</asp:ListItem>
-                            <asp:ListItem Value="3">一级报警</asp:ListItem>
-                            <asp:ListItem Value="2">二级报警</asp:ListItem>
-                            <asp:ListItem Value="1">三级报警</asp:ListItem>
+                            <asp:ListItem Value="I">一级报警</asp:ListItem>
+                            <asp:ListItem Value="II">二级报警</asp:ListItem>
+                            <asp:ListItem Value="III">三级报警</asp:ListItem>
                         </asp:DropDownList>
                     <asp:Label ID="lb_wheelNo" runat="server" Text="轮位："></asp:Label>
                         <asp:DropDownList ID="DropDownList2" runat="server" >
                             <asp:ListItem Value="All">全部</asp:ListItem>
-                            <asp:ListItem Value="1">1位</asp:ListItem>
-                            <asp:ListItem Value="2">2位</asp:ListItem>
-                            <asp:ListItem Value="3">3位</asp:ListItem>
-                            <asp:ListItem Value="4">4位</asp:ListItem>
-                            <asp:ListItem Value="5">5位</asp:ListItem>
-                            <asp:ListItem Value="6">6位</asp:ListItem>
-                            <asp:ListItem Value="7">7位</asp:ListItem>
-                            <asp:ListItem Value="8">8位</asp:ListItem>
+                            <asp:ListItem Value="1位">1位</asp:ListItem>
+                            <asp:ListItem Value="2位">2位</asp:ListItem>
+                            <asp:ListItem Value="3位">3位</asp:ListItem>
+                            <asp:ListItem Value="4位">4位</asp:ListItem>
+                            <asp:ListItem Value="5位">5位</asp:ListItem>
+                            <asp:ListItem Value="6位">6位</asp:ListItem>
+                            <asp:ListItem Value="7位">7位</asp:ListItem>
+                            <asp:ListItem Value="8位">8位</asp:ListItem>
                         </asp:DropDownList>
                  </div>
                 <br/>
@@ -157,8 +157,7 @@ z-index:1000;
                     
                     <div style="width: 80%; height: 30px;float: right">
                         <asp:CheckBoxList ID="CheckBoxList2" runat="server" RepeatDirection="Horizontal">
-                            <asp:ListItem Value="scratch_depth">缺陷深度</asp:ListItem>
-                            <asp:ListItem Value="scratch_length">缺陷长度</asp:ListItem>
+                            <asp:ListItem Value="scratch_depth">擦伤</asp:ListItem>
                         </asp:CheckBoxList>
                     </div>
                     <div style="width: 19%; height: 30px; float: left;">
@@ -173,7 +172,6 @@ z-index:1000;
                     </div>
                     <div style="width: 100%; height: 30px; float: left;margin-left: 45%">
                         <asp:Button ID="CheckBtn" runat="server" Text="查询" OnClick="CheckBtn_OnClick" Width="70px" />
-                        <asp:Button ID="DownloadBtn" runat="server" Text="数据下载" OnClick="DownloadBtn_OnClick" Width="70px" />
                     </div>
                     
                 </div>
@@ -184,86 +182,134 @@ z-index:1000;
                  </asp:UpdatePanel>
             <br/>
             <br/>
-            
-            <div class="title" ><span class="title">
-                <asp:Label ID="Label1" runat="server" Text="查询结果"></asp:Label></span>
-            </div>
-            
-            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                <Triggers>  
-                    <asp:PostBackTrigger ControlID="DownloadBtn" />  
-               </Triggers>  
+            <div class="content">
+            <asp:UpdatePanel ID="UpdatePanel1"  runat="server">
+                <Triggers>
+                    <asp:PostBackTrigger ControlID="btn_downloadWaiXing"/>
+                </Triggers>
              <ContentTemplate>
                   <asp:Panel ID="Panel1" runat="server">
-                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                  <div class="title" style="position: relative" >
+                    <div style="float: left;width: 22%" >
+                    </div>
+                    <div style="float: left;width: 50%">
+                        <span class="title" >
+                            <asp:Label ID="Label2" runat="server" Text="外形报警查询结果">
+                            </asp:Label>
+                        </span>
+                    </div>
+                    <div style="width: 22%;float: right" >
+                        <div style="float: right">
+                       <asp:Button ID="btn_downloadWaiXing" runat="server" Text="数据下载" OnClick="DownloadBtn_OnClick" />
+                       <asp:Button ID="btn_display" runat="server" Text="隐藏" OnClick="btn_display_OnClick" />
+                            </div>
+                    </div>  
+            </div>
+            
+                <asp:GridView ID="GridView1" runat="server" CellPadding="3"
                     Width="976px" onrowcancelingedit="GridView1_RowCancelingEdit" 
                     onrowupdating="GridView1_RowUpdating" 
-                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF"  AllowSorting="True" HorizontalAlign="Center" OnRowEditing="GridView1_RowEditing" OnRowDataBound="GridView1_RowDataBound">
+                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF" AllowSorting="True" HorizontalAlign="Center"  ForeColor="Black" OnRowEditing="GridView1_RowEditing" OnRowDataBound="GridView1_RowDataBound" BorderWidth="1px" OnRowCommand="GridView1_RowCommand"  AutoGenerateColumns="False">
                     <Columns>
-                        <asp:BoundField DataField="序号" HeaderText="序号" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="检测时间" HeaderText="检测时间" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="车组号" HeaderText="车组号" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="车厢号" HeaderText="车厢号" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="轮位" HeaderText="轮位" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="检测项" HeaderText="检测项" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="检测值" HeaderText="检测值" ReadOnly="True" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="复核值" HeaderText="复核值" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:TemplateField HeaderText="报警级别"  SortExpression="报警级别">
-                            <ItemTemplate>
-                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# PUBS.GetLevelTxt(Eval("报警级别")) %>'></asp:Label>
-                            </ItemTemplate>                    
-                                <ItemStyle ForeColor="Black" />
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="复核人" SortExpression="复核人">
-                            <ItemTemplate>
-                                <asp:Label ID="trainNoFromLbl" Runat="Server" Text='<%# Bind("复核人") %>'></asp:Label>
-                            </ItemTemplate>
-                           <EditItemTemplate>
-                               <ajaxToolkit:ComboBox ID="cb_recheckPerson" DataSourceID="SqlDataSource3" DropDownStyle="DropDown" DataTextField="DisplayName" MaxLength="30" style="top:10px" Width="100%" runat="server"></ajaxToolkit:ComboBox>
-                           </EditItemTemplate>                       
-                                <ItemStyle ForeColor="Black" />
-                        </asp:TemplateField>
-                        <asp:BoundField DataField="处理意见" HeaderText="处理意见" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="处理人" HeaderText="处理人"  ReadOnly="True">
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="备注" HeaderText="备注" >
-                        <ItemStyle ForeColor="Black" />
-                        </asp:BoundField>
-                        <asp:CommandField HeaderText="编辑 " ShowEditButton="True" EditText="编缉" 
-                        CancelText="取消" UpdateText="更新" ItemStyle-ForeColor="#33CCFF" 
-                        ControlStyle-ForeColor="#33CCFF" >
-                            </asp:CommandField> 
+                        <asp:ButtonField  Text="编辑" runat="server" CommandName="recheck"
+                                     />
                     </Columns>
                     <HeaderStyle ForeColor="White" />
-                    <PagerStyle ForeColor="Black" HorizontalAlign="Center" VerticalAlign="Bottom" />
+                    <PagerStyle ForeColor="Black" HorizontalAlign="Center" />
                     <SortedAscendingCellStyle ForeColor="Black" />
                     <SortedAscendingHeaderStyle ForeColor="White" />
                     <SortedDescendingHeaderStyle ForeColor="White" />
-                    </asp:GridView>   
-                </asp:Panel>          
+                    </asp:GridView>    
+                </asp:Panel>   
+                            </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+
+            <div class="content">  
+            <asp:UpdatePanel ID="UpdatePanel3"  runat="server">
+                <Triggers>
+                    <asp:PostBackTrigger ControlID="btn_downloadTanShang"/>
+                </Triggers>
+             <ContentTemplate>
+                  <asp:Panel ID="Panel2" runat="server">   
+                  <div class="title" style="position: relative" >
+                    <div style="float: left;width: 22%" >
+                    </div>
+                    <div style="float: left;width: 50%">
+                        <span class="title" >
+                            <asp:Label ID="Label3" runat="server" Text="探伤报警查询结果">
+                            </asp:Label>
+                        </span>
+                    </div>
+                    <div style="width: 22%;float: right" >
+                        <div style="float: right">
+                       <asp:Button ID="btn_downloadTanShang" runat="server" Text="数据下载" OnClick="btn_displayForTanShang_OnClick"  />
+                       <asp:Button ID="btn_displayForTanShang" runat="server" Text="隐藏" OnClick="btn_displayForTanShang_OnClick"  />
+                            </div>
+                    </div>  
+            </div>
+                <asp:GridView ID="GridView2" runat="server" CellPadding="3"
+                    Width="976px" onrowcancelingedit="GridView1_RowCancelingEdit" 
+                    onrowupdating="GridView1_RowUpdating" 
+                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF" AllowSorting="True" HorizontalAlign="Center"  BorderWidth="1px" OnRowCommand="GridView2_RowCommand" ForeColor="Black" AutoGenerateColumns="False" >
+                    <Columns>
+                        <asp:ButtonField  Text="编辑" runat="server" CommandName="recheck"
+                                     />
+                    </Columns>
+                    <HeaderStyle ForeColor="White" />
+                    <PagerStyle ForeColor="Black" HorizontalAlign="Center" />
+                    <SortedAscendingCellStyle ForeColor="Black" />
+                    <SortedAscendingHeaderStyle ForeColor="White" />
+                    <SortedDescendingHeaderStyle ForeColor="White" />
+                    </asp:GridView>  
+                    </asp:Panel>
                             </ContentTemplate>
                 </asp:UpdatePanel>
         </div>
-
+        
+            <div class="content">        
+                
+            <asp:UpdatePanel ID="UpdatePanel4"  runat="server">
+                <Triggers>
+                    <asp:PostBackTrigger ControlID="btn_downloadCaShang"/>
+                </Triggers>
+             <ContentTemplate>
+                  <asp:Panel ID="Panel3" runat="server">
+                  <div class="title" style="position: relative" >
+                    <div style="float: left;width: 22%" >
+                    </div>
+                    <div style="float: left;width: 50%">
+                        <span class="title" >
+                            <asp:Label ID="Label4" runat="server" Text="擦伤报警查询结果">
+                            </asp:Label>
+                        </span>
+                    </div>
+                    <div style="width: 22%;float: right" >
+                        <div style="float: right">
+                            <asp:Button ID="btn_downloadCaShang" runat="server" Text="数据下载" OnClick="btn_downloadCaShang_OnClick"  />
+                            <asp:Button ID="btn_displayForCaShang" runat="server" Text="隐藏" OnClick="btn_displayForCaShang_OnClick" />
+                        </div>
+                    </div>  
+            </div>
+            
+                <asp:GridView ID="GridView3" runat="server" CellPadding="3"
+                    Width="976px" 
+                     AlternatingRowStyle-VerticalAlign="NotSet" BackColor="#CCFFFF" AllowSorting="True" HorizontalAlign="Center"  BorderWidth="1px" OnRowCommand="GridView3_RowCommand" ForeColor="Black" AutoGenerateColumns="False" >
+                    <Columns>
+                        <asp:ButtonField  Text="编辑" runat="server" CommandName="recheck"
+                                     />
+                    </Columns>
+                    <HeaderStyle ForeColor="White" />
+                    <PagerStyle ForeColor="Black" HorizontalAlign="Center" />
+                    <SortedAscendingCellStyle ForeColor="Black" />
+                    <SortedAscendingHeaderStyle ForeColor="White" />
+                    <SortedDescendingHeaderStyle ForeColor="White" />
+                    </asp:GridView>  
+                      </asp:Panel>        
+                            </ContentTemplate>
+                </asp:UpdatePanel>
+        </div>   
+        </div>
    
     <%=PUBS.OutputFoot("") %>
     </form>

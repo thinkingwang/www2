@@ -12,7 +12,7 @@
     数据筛选
     <table class="tab01" cellSpacing="1" cellPadding="0" width="19%" bgColor="#e5e5e5" border="0">
 		<tr>
-		    <td align="middle">
+		    <td align="center">
                 abc
             </td>
         </tr>

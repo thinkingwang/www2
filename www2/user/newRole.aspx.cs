@@ -17,11 +17,6 @@ public partial class newuser : System.Web.UI.Page
     {
         if (Session["login"] == null)
             Response.Redirect(PUBS.HomePage);
-        if (PUBS.GetUserLevel() != 0)
-        {
-            Response.Write("<script>alert(\'无权限\');</script>");
-            Response.Redirect(PUBS.HomePage);
-        }
         if (!IsPostBack)
         {
             BindRoles();
@@ -56,6 +51,9 @@ public partial class newuser : System.Web.UI.Page
                 Roles.CreateRole(txtrolename.Text);
                 BindRoles();
                 Label1.Text = "增加角色\"" + txtrolename.Text + "\"成功";
+                var log = PUBS.GetLogContect(',', "增加角色，角色名为：",
+                    txtrolename.Text);
+                PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 28, log);
             }
             else
             {
@@ -92,7 +90,10 @@ public partial class newuser : System.Web.UI.Page
             {
                 Roles.DeleteRole(lstRoles.Text);
                 BindRoles();
-                Label1.Text = "删除角色\""+ lstRoles.Text +"\"成功";
+                Label1.Text = "删除角色\"" + lstRoles.Text + "\"成功";
+                var log = PUBS.GetLogContect(',', "删除角色，角色名为：",
+                    txtrolename.Text);
+                PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 29, log);
             }
         }
         catch (Exception ex)

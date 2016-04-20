@@ -38,7 +38,7 @@
 <!-- 浮动代码开始 -->
 
 <div id="ShowAD" style="position:absolute; z-index: 100; display:none">
-<div style="width:235;height:18px;font-size:14px;font-weight:bold;text-align:left;CURSOR: hand;float:right" onClick="closead();"><font color=ff0000>关闭</font></div>
+<div style="width:235px;height:18px;font-size:14px;font-weight:bold;text-align:left;CURSOR: hand;float:right" onClick="closead();"><font color=ff0000>关闭</font></div>
         <div class="content3">
         <div class="title"><span class="title"><%=PUBS.Txt("数据筛选")%></span></div>
                 <table style="width: 100%;text-align:left">
@@ -138,7 +138,7 @@
                                     </td>
 
                                 </tr>
-<%if ((bool)Application["SYS_TS"])
+<%if ((bool)Session["SYS_TS"])
   {
  %>
                                 <tr style="background-color:Olive">
@@ -164,7 +164,7 @@
                                      </td>
                                 </tr>
 <%}
-    if ((bool)Application["SYS_CS"])
+    if ((bool)Session["SYS_CS"])
     {
  %>
                                 <tr style="background-color:Olive">
@@ -188,7 +188,7 @@
                                      </td>
                                 </tr>
                                 <%}
-                                    if ((bool)Application["SYS_WX"])
+                                    if ((bool)Session["SYS_WX"])
                                     { %>
                                 <tr style="background-color:Olive">
                                 <td  colspan=3 >
@@ -412,19 +412,19 @@
     <%} %>
     
     <span style ="margin-right:5pt; float:right">
+    <asp:Button ID="bt_log" runat="server" Text="操作日志" 
+onclick="bt_log_Click" />
+    </span>
+    <span style ="margin-right:5pt; float:right">
     <asp:Button ID="bt_user" runat="server" Text="权限管理" 
 onclick="bt_user_Click" />
     </span>
-    <%if (PUBS.GetUserLevel() == 0)
-      {%>
      <%--       <span style ="float:right">
             <asp:Button ID="bt_engine" runat="server" Text="车组管理" 
         onclick="bt_engine_Click" Visible="True" />
             </span>--%>
             
-            
-<%if (((bool)Application["SYS_Have_Threshold_Config"]) || PUBS.isTychoAdmin())
-  {%>
+        
 
           <%--  <span style ="margin-right:5pt; float:right">
             <asp:Button ID="Button2" runat="server" Text="门限管理" 
@@ -451,8 +451,6 @@ onclick="bt_user_Click" />
                 </asp:Menu>
             </span>
 
-<%} %>
-
             <span style ="margin-right:5pt; float:right">
             <asp:Button ID="bt_Verify" runat="server" Text="校验管理" onclick="bt_Verify_Click" 
          />
@@ -461,7 +459,7 @@ onclick="bt_user_Click" />
                 <asp:Menu ID="Menu1" runat="server" BackColor="Coral" ForeColor="Black" StaticSubMenuIndent="16px" Font-Size="12pt" OnMenuItemClick="Menu1_MenuItemClick">
                             <Items>
                                 <asp:MenuItem Text="查询" Value="查询">
-                                    <asp:MenuItem Text="综合查询" Value="zongheCheck "></asp:MenuItem>
+                                    <asp:MenuItem Text="综合查询" Value="zongheCheck"></asp:MenuItem>
                                     <asp:MenuItem Text="历史查询" Value="checkHistory"></asp:MenuItem>
                                     <asp:MenuItem Text="超限查询" Value="CheckAlarm"></asp:MenuItem>
                                 </asp:MenuItem>
@@ -477,9 +475,6 @@ onclick="bt_user_Click" />
                 </asp:Menu>
             </span>
             
-    <%} %>
-    <%if (PUBS.GetUserLevel() <= 1)
-      {%>
             <span style ="margin-right:5pt; float:right">
                <asp:Button ID="btSwitch" runat="server" Text="探伤开关" Visible="True" 
         onclick="btSwitch_Click" />
@@ -491,7 +486,6 @@ onclick="bt_user_Click" />
             <span style ="margin-right:5pt; float:right">
                <asp:Button ID="btEditEngine" runat="server" Text="轮径维护" Visible="False" />
             </span>
-    <%} %>
          <%--   <span style ="float:right">
             <input id="Button1"  type="button" value="综合查询" onclick="openad()"  />
             </span>--%>

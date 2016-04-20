@@ -28,11 +28,6 @@ public partial class Verify : System.Web.UI.Page
     {
         if (Session["login"] == null)
             Response.Redirect(PUBS.HomePage);
-        if (PUBS.GetUserLevel() > 1)
-        {
-            Response.Write("<script>alert(\'无权限\');</script>");
-            Response.Redirect(PUBS.HomePage);
-        }
         if (!IsPostBack)
         {
             using (
@@ -250,8 +245,11 @@ public partial class Verify : System.Web.UI.Page
                 cmd.CommandText = string.Format("update thresholds set [{0}]={1} where [trainType]='{2}' and [name]='{3}'", data, b, trainType, name);
                 cmd.ExecuteNonQuery();
             }
+            var log = PUBS.GetLogContect(',', "更新阈值表，车型为：",
+                  trainType);
+            PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 27, log); 
         }
-        GetBind(-1);   
+        GetBind(-1);
     }
     private static string GetTextValue(GridViewRow row, string ckId,string tbxId)
     {
@@ -401,6 +399,9 @@ public partial class Verify : System.Web.UI.Page
         SqlDataSource2.SelectCommand = "SELECT DISTINCT [trainType] FROM  [thresholds]";
         DropDownList1.Items.Add(trainTypeTxt.Text);
         DropDownList1.SelectedValue = trainTypeTxt.Text;
+        var log = PUBS.GetLogContect(',', "增加车型阈值配置，车型为：",
+              trainTypeTxt.Text);
+        PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 25, log);
         GetBind(-1);
     }
 
@@ -410,6 +411,9 @@ public partial class Verify : System.Web.UI.Page
         DropDownList1.SelectedValue = "default";
         SqlDataSource2.SelectCommand = "SELECT DISTINCT [trainType] FROM  [thresholds]";
         DropDownList1.Items.Remove(trainTypeTxt.Text);
+        var log = PUBS.GetLogContect(',', "删除车型阈值配置，车型为：",
+              trainTypeTxt.Text);
+        PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 26, log);
         GetBind(-1);
     }
     protected void NewTrainPowerType_Click(object sender, EventArgs e)
@@ -428,6 +432,9 @@ public partial class Verify : System.Web.UI.Page
         SqlDataSource2.SelectCommand = "SELECT DISTINCT [trainType] FROM  [thresholds]";
         DropDownList1.Items.Add(trainTypeTxt.Text);
         DropDownList1.SelectedValue = trainTypeTxt.Text;
+        var log = PUBS.GetLogContect(',', "新增车型阈值配置，车型为：",
+              trainTypeTxt.Text);
+        PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 25, log);
         GetBind(-1);
     }
     protected void DeleteTrainPowerType_Click(object sender, EventArgs e)
@@ -443,6 +450,9 @@ public partial class Verify : System.Web.UI.Page
         SqlDataSource2.SelectCommand = "SELECT DISTINCT [trainType] FROM  [thresholds]";
         DropDownList1.Items.Add(trainTypeTxt.Text);
         DropDownList1.SelectedValue = trainTypeTxt.Text;
+        var log = PUBS.GetLogContect(',', "删除车型阈值拖车配置，车型为：",
+              trainTypeTxt.Text);
+        PUBS.Log(Request.UserHostAddress, PUBS.GetCurrentUser(), 25, log);
         GetBind(-1);
     }
     protected void bt_back_Click(object sender, EventArgs e)

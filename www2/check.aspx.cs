@@ -8,6 +8,8 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using Microsoft.Ajax.Utilities;
+
 //using System.Xml.Linq;
 
 public partial class Verify : System.Web.UI.Page
@@ -138,6 +140,10 @@ public partial class Verify : System.Web.UI.Page
             tb_ts_who.Text = t.Rows[0]["ts_who"].ToString();
             tb_cs_who.Text = t.Rows[0]["cs_who"].ToString();
             tb_wx_who.Text = t.Rows[0]["wx_who"].ToString();
+            //增加处理人列
+            lb_ts_operator.Text = PUBS.GetUserDisplayName(t.Rows[0]["ts_operator"].ToString());
+            lb_cs_operator.Text = PUBS.GetUserDisplayName(t.Rows[0]["cs_operator"].ToString());
+            lb_wx_operator.Text = PUBS.GetUserDisplayName(t.Rows[0]["wx_operator"].ToString());
 
             DropDownCalendar_ts.Text = (t.Rows[0]["ts_date"] == DBNull.Value) ? "" : Convert.ToDateTime(t.Rows[0]["ts_date"]).ToString("yyyy-MM-dd");
             DropDownCalendar_cs.Text = (t.Rows[0]["cs_date"] == DBNull.Value) ? "" : Convert.ToDateTime(t.Rows[0]["cs_date"]).ToString("yyyy-MM-dd");
@@ -177,11 +183,30 @@ public partial class Verify : System.Web.UI.Page
         PUBS.sqlRun(string.Format("delete from ReCheck where testdatetime='{0}' and axleNo={1} and wheelNo={2}", datetimestr, axleNo, wheelNo));
 
 
-        PUBS.sqlRun(string.Format("insert into ReCheck (testdatetime, axleNo, wheelNo, ts_desc, cs_desc, wx_lj, wx_lyhd, wx_lygd, wx_lwhd, wx_qr, wx_ncj, ts_who, cs_who, wx_who, ts_date, cs_date, wx_date) values('{0}', {1}, {2}, '{3}', '{4}', {5}, {6}, {7}, {8}, {9}, {10},  '{11}', '{12}', '{13}', {14}, {15}, {16})",
-            datetimestr, axleNo, wheelNo, tb_ts_desc.Text, tb_cs_desc.Text, tb_wx_lj.Text == "" ? "null" : tb_wx_lj.Text, tb_wx_lyhd.Text == "" ? "null" : tb_wx_lyhd.Text, tb_wx_lygd.Text == "" ? "null" : tb_wx_lygd.Text, tb_wx_lwhd.Text == "" ? "null" : tb_wx_lwhd.Text, tb_wx_qr.Text == "" ? "null" : tb_wx_qr.Text, tb_wx_ncj.Text == "" ? "null" : tb_wx_ncj.Text, tb_ts_who.Text, tb_cs_who.Text, tb_wx_who.Text, DropDownCalendar_ts.Text == "" ? "null" : "'" + DropDownCalendar_ts.Text + "'", DropDownCalendar_cs.Text == "" ? "null" : "'" + DropDownCalendar_cs.Text + "'", DropDownCalendar_wx.Text == "" ? "null" : "'" + DropDownCalendar_wx.Text + "'"));
+        PUBS.sqlRun(
+            string.Format(
+                "insert into ReCheck (testdatetime, axleNo, wheelNo, ts_desc, cs_desc, wx_lj, wx_lyhd, wx_lygd, wx_lwhd, wx_qr, wx_ncj, ts_who, cs_who, wx_who, ts_date, cs_date, wx_date,ts_operator,cs_operator,wx_operator) values('{0}', {1}, {2}, '{3}', '{4}', {5}, {6}, {7}, {8}, {9}, {10},  '{11}', '{12}', '{13}', {14}, {15}, {16},'{17}','{17}','{17}')",
+                datetimestr, axleNo, wheelNo, tb_ts_desc.Text, tb_cs_desc.Text,
+                tb_wx_lj.Text == "" ? "null" : tb_wx_lj.Text, tb_wx_lyhd.Text == "" ? "null" : tb_wx_lyhd.Text,
+                tb_wx_lygd.Text == "" ? "null" : tb_wx_lygd.Text, tb_wx_lwhd.Text == "" ? "null" : tb_wx_lwhd.Text,
+                tb_wx_qr.Text == "" ? "null" : tb_wx_qr.Text, tb_wx_ncj.Text == "" ? "null" : tb_wx_ncj.Text,
+                tb_ts_who.Text, tb_cs_who.Text, tb_wx_who.Text,
+                DropDownCalendar_ts.Text == "" ? "null" : "'" + DropDownCalendar_ts.Text + "'",
+                DropDownCalendar_cs.Text == "" ? "null" : "'" + DropDownCalendar_cs.Text + "'",
+                DropDownCalendar_wx.Text == "" ? "null" : "'" + DropDownCalendar_wx.Text + "'", HttpContext.Current.User.Identity.Name));
 
-        PUBS.sqlRun(string.Format("insert into log_ReCheck (testdatetime, axleNo, wheelNo, ts_desc, cs_desc, wx_lj, wx_lyhd, wx_lygd, wx_lwhd, wx_qr, wx_ncj, ts_who, cs_who, wx_who, ts_date, cs_date, wx_date, CommitTime, UserName, fromIP) values('{0}', {1}, {2}, '{3}', '{4}', {5}, {6}, {7}, {8}, {9}, {10}, '{11}', '{12}', '{13}', {14}, {15}, {16}, '{17}', '{18}', '{19}')",
-    datetimestr, axleNo, wheelNo, tb_ts_desc.Text, tb_cs_desc.Text, tb_wx_lj.Text == "" ? "null" : tb_wx_lj.Text, tb_wx_lyhd.Text == "" ? "null" : tb_wx_lyhd.Text, tb_wx_lygd.Text == "" ? "null" : tb_wx_lygd.Text, tb_wx_lwhd.Text == "" ? "null" : tb_wx_lwhd.Text, tb_wx_qr.Text == "" ? "null" : tb_wx_qr.Text, tb_wx_ncj.Text == "" ? "null" : tb_wx_ncj.Text, tb_ts_who.Text, tb_cs_who.Text, tb_wx_who.Text, DropDownCalendar_ts.Text == "" ? "null" : "'" + DropDownCalendar_ts.Text + "'", DropDownCalendar_cs.Text == "" ? "null" : "'" + DropDownCalendar_cs.Text + "'", DropDownCalendar_wx.Text == "" ? "null" : "'" + DropDownCalendar_wx.Text + "'", DateTime.Now, Membership.GetUser().UserName, Request.UserHostAddress));
+        PUBS.sqlRun(
+            string.Format(
+                "insert into log_ReCheck (testdatetime, axleNo, wheelNo, ts_desc, cs_desc, wx_lj, wx_lyhd, wx_lygd, wx_lwhd, wx_qr, wx_ncj, ts_who, cs_who, wx_who, ts_date, cs_date, wx_date,ts_operator,cs_operator,wx_operator, CommitTime, UserName, fromIP) values('{0}', {1}, {2}, '{3}', '{4}', {5}, {6}, {7}, {8}, {9}, {10}, '{11}', '{12}', '{13}', {14}, {15}, {16}, '{20}', '{20}', '{20}', '{17}', '{18}', '{19}')",
+                datetimestr, axleNo, wheelNo, tb_ts_desc.Text, tb_cs_desc.Text,
+                tb_wx_lj.Text == "" ? "null" : tb_wx_lj.Text, tb_wx_lyhd.Text == "" ? "null" : tb_wx_lyhd.Text,
+                tb_wx_lygd.Text == "" ? "null" : tb_wx_lygd.Text, tb_wx_lwhd.Text == "" ? "null" : tb_wx_lwhd.Text,
+                tb_wx_qr.Text == "" ? "null" : tb_wx_qr.Text, tb_wx_ncj.Text == "" ? "null" : tb_wx_ncj.Text,
+                tb_ts_who.Text, tb_cs_who.Text, tb_wx_who.Text,
+                DropDownCalendar_ts.Text == "" ? "null" : "'" + DropDownCalendar_ts.Text + "'",
+                DropDownCalendar_cs.Text == "" ? "null" : "'" + DropDownCalendar_cs.Text + "'",
+                DropDownCalendar_wx.Text == "" ? "null" : "'" + DropDownCalendar_wx.Text + "'", DateTime.Now,
+                Membership.GetUser().UserName, Request.UserHostAddress, HttpContext.Current.User.Identity.Name));
 
         //Response.Write("<script language=javascript>alert(\'复核数据已提交。\');</script>");
         Page.RegisterStartupScript("hello", "<script>alert(\'复核数据已提交\')</script>"); 

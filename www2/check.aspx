@@ -113,6 +113,7 @@
                 <td class="style4">检测值</td>
                 <td class="style8">复核情况</td>
                 <td class="style18">复核人</td>
+                <td class="style18">处理人</td>
                 <td class="style20">复核日期</td>
             </tr>
             <tr>
@@ -133,6 +134,12 @@
                         &nbsp;
                         <asp:TextBox id="tb_ts_who"  runat="server"  
                                style="width:68px; position:relative;  left:-12px;top:-16px" Font-Size="Large" ></asp:TextBox>
+                         </div>
+                    </td>
+                <td class="style19">
+                       <div>
+                        <asp:Label id="lb_ts_operator"  runat="server"  
+                               style="width:68px; position:relative;  left:-12px;top:-16px" Font-Size="Large" ></asp:Label>
                          </div>
                     </td>
                 <td class="style21">
@@ -160,6 +167,12 @@
                                style="width:68px; position:relative;  left:-12px;top:-16px" Font-Size="Large" ></asp:TextBox>
                     </div>
                 </td>
+                <td class="style19">
+                       <div>
+                        <asp:Label id="lb_cs_operator"  runat="server"  
+                               style="width:68px; position:relative;  left:-12px;top:-16px" Font-Size="Large" ></asp:Label>
+                         </div>
+                    </td>
                 <td class="style21">
                     <asp:TextBox ID="DropDownCalendar_cs" runat="server" Width="100" Visible="true" Font-Size="Large" /><asp:Image  id="Image1"  runat="server"  onclick="WdatePicker({el:'DropDownCalendar_cs'})" src="My97DatePicker/skin/datePicker.gif" width="16" height="22" align="absmiddle" Visible="true" />
                 </td>
@@ -189,6 +202,12 @@
                                style="width:68px; position:relative;  left:-12px;top:-16px" Font-Size="Large" ></asp:TextBox>
                     </div>
                 </td>
+                <td class="style19" rowspan="10">
+                       <div>
+                        <asp:Label id="lb_wx_operator"  runat="server"  
+                               style="width:68px; position:relative;  left:-12px;top:-16px" Font-Size="Large" ></asp:Label>
+                         </div>
+                    </td>
                 <td class="style21" rowspan="10">
                     <asp:TextBox ID="DropDownCalendar_wx" runat="server" Width="100" Visible="true" Font-Size="Large" /><asp:Image  id="Image2"  runat="server"  onclick="WdatePicker({el:'DropDownCalendar_wx'})" src="My97DatePicker/skin/datePicker.gif" width="16" height="22" align="absmiddle" Visible="true" />
                 </td>

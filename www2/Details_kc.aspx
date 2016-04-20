@@ -520,7 +520,7 @@ z-index:1000;
     </tr>
     </table>
 </div>
-<div id="ShowUser" style="position:absolute; z-index: 100; top:10; left:0;">
+<div id="ShowUser" style="position:absolute; z-index: 100; top:10px; left:0;">
             <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" 
                 DataSourceID="SqlDataSource4">
                 <Columns>
@@ -645,7 +645,7 @@ z-index:1000;
    <div class="title" style="text-decoration: none"><span class="title"><%=PUBS.Txt("整车检测明细")%></span></div>
 
                <table id="datatable" width="980" border="1" bordercolor="gray" cellspacing="0" 
-                   cellpadding="0" style="color: white; font">
+                   cellpadding="0" style="color: white; ">
                    <%
     //System.Data.DataView dv = (System.Data.DataView)SqlDataSource4.Select(DataSourceSelectArguments.Empty);
     //System.Data.DataTable dt = dv.Table;
@@ -690,7 +690,7 @@ z-index:1000;
     string carNo = "";
 
     int haveWxAdj;
-    if ((bool)Application["SYS_WX"])
+    if ((bool)Session["SYS_WX"])
         haveWxAdj = 0;
     else
         haveWxAdj = 1;
@@ -714,36 +714,36 @@ z-index:1000;
             Response.Write(string.Format("<td  rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("轮位"), 3 - haveWxAdj));
             if (isOperator)
                 Response.Write(string.Format("<td  rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("复核"), 3 - haveWxAdj));
-            if ((bool)Application["SYS_TS"])
+            if ((bool)Session["SYS_TS"])
                 Response.Write(string.Format("<td  colspan=\"2\">{0}</td>\r\n", PUBS.Txt("探伤")));
-            if ((bool)Application["SYS_CS"])
+            if ((bool)Session["SYS_CS"])
             {
                 int cw = 2;
-                if ((bool)Application["SYS_CS_IMAGE"])
+                if ((bool)Session["SYS_CS_IMAGE"])
                     cw = 3;
                 Response.Write(string.Format("<td  colspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("擦伤"), cw));
             }
-            if ((bool)Application["SYS_WX"])
+            if ((bool)Session["SYS_WX"])
                 Response.Write(string.Format("<td  colspan=\"10\">{0}</td>\r\n", PUBS.Txt("外形尺寸(mm)")));
             Response.Write(string.Format("<td  rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("照片"), 3 - haveWxAdj));
             Response.Write("</tr>\r\n");
             Response.Write("<tr bgcolor=\"#20487C\">\r\n");
 
-            if ((bool)Application["SYS_TS"])
+            if ((bool)Session["SYS_TS"])
             {
                 Response.Write(string.Format("<td rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("级别"), 2 - haveWxAdj));
                 Response.Write(string.Format("<td rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("状态"), 2 - haveWxAdj));
             }
-            if ((bool)Application["SYS_CS"])
+            if ((bool)Session["SYS_CS"])
             {
                 Response.Write(string.Format("<td rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("级别"), 2 - haveWxAdj));
-                if ((bool)Application["SYS_CS_IMAGE"])
+                if ((bool)Session["SYS_CS_IMAGE"])
                 {
                     Response.Write(string.Format("<td rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("图像"), 2 - haveWxAdj));
                 }
                 Response.Write(string.Format("<td rowspan=\"{1}\">{0}</td>\r\n", PUBS.Txt("状态"), 2 - haveWxAdj));
             }
-            if ((bool)Application["SYS_WX"])
+            if ((bool)Session["SYS_WX"])
             {
                 Response.Write(string.Format("<td colspan=\"4\">{0}</td>\r\n", PUBS.Txt("轮径")));
                 Response.Write(string.Format("<td rowspan=\"2\">{0}</td>\r\n", PUBS.Txt("踏面<br/>磨耗")));
@@ -755,7 +755,7 @@ z-index:1000;
             }
             Response.Write("</tr>\r\n");
 
-            if ((bool)Application["SYS_WX"])
+            if ((bool)Session["SYS_WX"])
             {
                 Response.Write("<tr bgcolor=\"#20487C\">\r\n");
                 Response.Write(string.Format("<td>{0}</td>\r\n", PUBS.Txt("直径")));
@@ -778,7 +778,7 @@ z-index:1000;
         }
         //在整车中的轴号
         int axleIndexInTrain = int.Parse(dr["axleNo"].ToString());
-        string checkUrl = string.Format("Recheck.aspx?datetimestr={0}&axleNo={1}&wheelNo={2}", sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
+        string checkUrl = string.Format("check.aspx?datetimestr={0}&axleNo={1}&wheelNo={2}", sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
         Response.Write(string.Format("<td>{0}</td>\r\n", lw));
         if (isOperator)
         {
@@ -795,7 +795,7 @@ z-index:1000;
         int imgId;
         string tip;
 
-        if ((bool)Application["SYS_TS"])
+        if ((bool)Session["SYS_TS"])
         {
             string ts = dr["slevel_ts"].ToString();
             string hh = dr["level"].ToString();
@@ -807,11 +807,11 @@ z-index:1000;
             if (ilevel != 1 && ilevel != 2 && ilevel != 3 && sp > 0)
                 ilevel = 5;
             
-            if (Application["SYS_TS_url"].ToString() == "")
+            if (Session["SYS_TS_url"].ToString() == "")
                 href = string.Format("TYCHOTS_{0}_{1}_{2}", sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
             else
             {
-                string hrefTS = string.Format("http://{0}:8084{1}", Request.Url.Host, Application["SYS_TS_url"].ToString());
+                string hrefTS = string.Format("http://{0}:8084{1}", Request.Url.Host, Session["SYS_TS_url"].ToString());
                 href = string.Format("{0}?testDateTime={1}&axleNo={2}&wheelNo={3}", hrefTS, sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
             }
             Response.Write(string.Format("<td width=50 {1}><a href=\"{2}\" {3}>{0}</a></td>\r\n", ts, sLevelStyle[ilevel], href, sLinkStyle[ilevel]));
@@ -819,7 +819,7 @@ z-index:1000;
 
             href = string.Format("TYCHOSW_{0}_{1}_{2}", sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
 
-            if (Application["SYS_MODE"].ToString() == "12UT")
+            if (Session["SYS_MODE"].ToString() == "12UT")
             {
                 GetSwStatus(dr["status6"], out imgId, out tip);
                 Response.Write(string.Format("<a href=\"{2}\"><img alt=\"{0}\" src=\"image/sw{1}.gif\" border=\"0\"/></a>|", tip, imgId, href + "_5"));
@@ -836,31 +836,31 @@ z-index:1000;
             Response.Write(string.Format("<a href=\"{2}\"><img alt=\"{0}\" src=\"image/sw{1}.gif\" border=\"0\"/></a>", tip, imgId, href + "_0"));
             Response.Write(string.Format("</td>\r\n"));
         }
-        if ((bool)Application["SYS_CS"])
+        if ((bool)Session["SYS_CS"])
         {
             string cs = dr["slevel_cs"].ToString();
             ilevel = int.Parse(dr["cslevel"].ToString());
-            if (Application["SYS_CS_url"].ToString() == "")
+            if (Session["SYS_CS_url"].ToString() == "")
                 href = string.Format("TYCHOCS_{0}_{1}_{2}", sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
             else
             {
-                string hrefCS = string.Format("http://{0}:8083{1}", Request.Url.Host, Application["SYS_CS_url"].ToString());
+                string hrefCS = string.Format("http://{0}:8083{1}", Request.Url.Host, Session["SYS_CS_url"].ToString());
                 href = string.Format("{0}?testDateTime={1}&axleNo={2}&wheelNo={3}", hrefCS, sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
             }
             Response.Write(string.Format("<td width=50 {1}><a href=\"{2}\" {3}>{0}</a></td>\r\n", cs, sLevelStyle[ilevel], href, sLinkStyle[ilevel]));
-            if ((bool)Application["SYS_CS_IMAGE"])
+            if ((bool)Session["SYS_CS_IMAGE"])
             {
                 string vcs = dr["slevel_vcs"].ToString();
                 ilevel = int.Parse(dr["vcslevel"].ToString());
                 
-                string hrefHX = string.Format("http://{0}:8082{1}", Request.Url.Host, Application["URL_HXZY"].ToString());
+                string hrefHX = string.Format("http://{0}:8082{1}", Request.Url.Host, Session["URL_HXZY"].ToString());
 
                 string urlHX = string.Format("{0}?testDateTime={1}&axleNo={2}&wheelNo={3}", hrefHX, sTestDateTime, axleIndexInTrain, dr["wheelNo"]).Replace(" ", "%20");
                 Response.Write(string.Format("<td width=50 {1}><a href=\"{2}\">{0}</a></td>\r\n", vcs, sLevelStyle[ilevel], urlHX));
             }
             if (w % 2 == 0)
             {
-                if (Application["SYS_CS_url"].ToString() == "")//cs老版本保留
+                if (Session["SYS_CS_url"].ToString() == "")//cs老版本保留
                 {
                     href = string.Format("TYCHOCW_{0}_{1}", sTestDateTime, axleIndexInTrain);
                     Response.Write(string.Format("<td rowspan=\"2\">\r\n"));
@@ -874,7 +874,7 @@ z-index:1000;
                 }
                 else
                 {
-                    string hrefCS = string.Format("http://{0}:8083{1}", Request.Url.Host, Application["SYS_CS_url"].ToString());
+                    string hrefCS = string.Format("http://{0}:8083{1}", Request.Url.Host, Session["SYS_CS_url"].ToString());
                     href = string.Format("{0}?testDateTime={1}&axleNo={2}&wheelNo={3}", hrefCS, sTestDateTime, axleIndexInTrain, dr["wheelNo"]);
                     Response.Write(string.Format("<td rowspan=\"2\">\r\n"));
                     GetCwStatus(dr["csStatus1"], out imgId, out tip);
@@ -891,7 +891,7 @@ z-index:1000;
         //动车还是拖车
         int powerType = int.Parse(dr["powerType"].ToString());
         
-        if ((bool)Application["SYS_WX"])
+        if ((bool)Session["SYS_WX"])
         {
             hrefWhms = string.Format("whms_wheel.aspx?datetimestr={0}&axleNo={1}", sTestDateTime, axleIndexInTrain);
             hrefWhmsWheel =  string.Format("{1}&wheelNo={0}", dr["wheelNo"], hrefWhms);
@@ -1025,21 +1025,21 @@ z-index:1000;
                 Response.Write("<tr>\r\n");
                 Response.Write("<td>-</td>\r\n");
                 Response.Write("<td>-</td>\r\n");
-                if ((bool)Application["SYS_TS"])
+                if ((bool)Session["SYS_TS"])
                 {
                     Response.Write("<td>-</td>\r\n");
                     Response.Write("<td>-</td>\r\n");
                 }
-                if ((bool)Application["SYS_CS"])
+                if ((bool)Session["SYS_CS"])
                 {
                     Response.Write("<td>-</td>\r\n");
                     Response.Write("<td>-</td>\r\n");
                 }
-                if ((bool)Application["SYS_CS_IMAGE"])
+                if ((bool)Session["SYS_CS_IMAGE"])
                 {
                     Response.Write("<td>-</td>\r\n");
                 }                    
-                if ((bool)Application["SYS_WX"])
+                if ((bool)Session["SYS_WX"])
                 {
                     Response.Write("<td>-</td>\r\n");
                     Response.Write("<td>-</td>\r\n");
@@ -1066,10 +1066,10 @@ z-index:1000;
     }
                    %>
                </table>     
-               <%if (((bool)Application["SYS_WX"])&&(bzh.StartsWith("CRH2") || bzh.StartsWith("CRH380A")))
+               <%if (((bool)Session["SYS_WX"])&&(bzh.StartsWith("CRH2") || bzh.StartsWith("CRH380A")))
                              { %>  
                <table width="980" border="1" bordercolor="gray" cellspacing="0" 
-                   cellpadding="0" style="color: white; font">
+                   cellpadding="0" style="color: white;">
                 <tr>
                <td width="200" bgcolor="#20487C">
                </td>

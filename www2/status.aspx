@@ -362,7 +362,7 @@
         <asp:Label ID="lb_ut8" runat="server" Text=""></asp:Label>
         </td>
         </tr>
-<%            if (Application["SYS_MODE"].ToString() == "12UT")
+<%            if (Session["SYS_MODE"].ToString() == "12UT")
               {
  %>
          <tr>
@@ -434,7 +434,7 @@
         <asp:Label ID="lb_cy8" runat="server" Text=""></asp:Label>
         </td>
         </tr>
-<%            if (Application["SYS_MODE"].ToString() == "12UT")
+<%            if (Session["SYS_MODE"].ToString() == "12UT")
               {
  %>
          <tr>

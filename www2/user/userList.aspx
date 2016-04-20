@@ -33,7 +33,7 @@
         <div class="title"><span class="title">用户列表</span></div>
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
             <ContentTemplate>      
-                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1" OnRowCommand="GridView1_RowCommand" OnRowDeleting="GridView1_RowDeleting" OnRowUpdating="GridView1_RowUpdating" OnRowDataBound="GridView1_RowDataBound">
+                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource1" OnRowCommand="GridView1_RowCommand" OnRowDeleting="GridView1_RowDeleting" OnRowUpdating="GridView1_RowUpdating" OnRowDataBound="GridView1_RowDataBound" OnRowEditing="GridView1_RowEditing" >
                         <Columns>
                             <asp:TemplateField HeaderText="序号">
                             <ItemTemplate>
@@ -65,10 +65,9 @@
                                 </EditItemTemplate>
                             </asp:TemplateField>
                             <asp:CommandField HeaderText="编辑 " ShowEditButton="True" EditText="编缉" 
-                            CancelText="取消" UpdateText="更新" ItemStyle-ForeColor="#33CCFF" 
-                            ControlStyle-ForeColor="#33CCFF" >
+                            CancelText="取消" UpdateText="更新" ShowDeleteButton="True" DeleteText="删除"
+                             >
                                 </asp:CommandField> 
-                            <asp:CommandField ShowDeleteButton="True" DeleteText="删除" />
                             <asp:ButtonField CommandName="changePassword" Text="修改密码" />
                         </Columns>
                     </asp:GridView>

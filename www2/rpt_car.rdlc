@@ -1,120 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
-  <DataSources>
-    <DataSource Name="tycho_kcDataSet">
-      <ConnectionProperties>
-        <DataProvider>System.Data.DataSet</DataProvider>
-        <ConnectString>/* Local Connection */</ConnectString>
-      </ConnectionProperties>
-      <rd:DataSourceID>9d186abc-c236-4e4d-aa1b-0647f479fa9b</rd:DataSourceID>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet1">
-      <Fields>
-        <Field Name="carNo">
-          <DataField>carNo</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="carInfo">
-          <DataField>carInfo</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="axleNo">
-          <DataField>axleNo</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_ts">
-          <DataField>L_ts</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_ts">
-          <DataField>R_ts</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_cs">
-          <DataField>L_cs</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_cs_deep">
-          <DataField>L_cs_deep</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_cs">
-          <DataField>R_cs</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_cs_deep">
-          <DataField>R_cs_deep</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_lj">
-          <DataField>L_lj</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_tmmh">
-          <DataField>L_tmmh</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_lyhd">
-          <DataField>L_lyhd</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_lygd">
-          <DataField>L_lygd</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_lwhd">
-          <DataField>L_lwhd</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="L_qr">
-          <DataField>L_qr</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ncj">
-          <DataField>ncj</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_lj">
-          <DataField>R_lj</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_tmmh">
-          <DataField>R_tmmh</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_lyhd">
-          <DataField>R_lyhd</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_lygd">
-          <DataField>R_lygd</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_lwhd">
-          <DataField>R_lwhd</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="R_qr">
-          <DataField>R_qr</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>tycho_kcDataSet</DataSourceName>
-        <CommandText>/* Local Query */</CommandText>
-      </Query>
-      <rd:DataSetInfo>
-        <rd:DataSetName>tycho_kcDataSet</rd:DataSetName>
-        <rd:SchemaPath>E:\tycho\4.0网络版\Tycho_win7\www2_roll\www2\App_Code\tycho_kcDataSet.xsd</rd:SchemaPath>
-        <rd:TableName>DataTable_train_detail</rd:TableName>
-        <rd:TableAdapterFillMethod />
-        <rd:TableAdapterGetDataMethod />
-        <rd:TableAdapterName />
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
       <Textbox Name="Textbox1">
@@ -216,39 +101,39 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>0.5298in</Width>
+              <Width>1.34569cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.77302in</Width>
+              <Width>1.96347cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.80475in</Width>
+              <Width>2.04407cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.59183in</Width>
+              <Width>1.50325cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.53124in</Width>
+              <Width>1.34935cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.53124in</Width>
+              <Width>1.34935cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.53124in</Width>
+              <Width>1.34935cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.53124in</Width>
+              <Width>1.34935cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.61967in</Width>
+              <Width>1.57396cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.62813in</Width>
+              <Width>1.59545cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>0.23622in</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -706,7 +591,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.23622in</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1035,7 +920,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.23622in</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1382,7 +1267,7 @@
           <TablixMembers>
             <TablixMember>
               <TablixHeader>
-                <Size>0.63444in</Size>
+                <Size>1.61148cm</Size>
                 <CellContents>
                   <Textbox Name="Textbox67">
                     <CanGrow>true</CanGrow>
@@ -1440,7 +1325,7 @@
                 </SortExpression>
               </SortExpressions>
               <TablixHeader>
-                <Size>0.63444in</Size>
+                <Size>1.61148cm</Size>
                 <CellContents>
                   <Textbox Name="Group2">
                     <CanGrow>true</CanGrow>
@@ -1512,21 +1397,21 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>1.13057in</Width>
+              <Width>2.87165cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.30717in</Width>
+              <Width>5.86021cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.03124in</Width>
+              <Width>2.61935cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.60417in</Width>
+              <Width>6.61459cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>0.23622in</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1665,7 +1550,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.23622in</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1816,7 +1701,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.23622in</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -2070,51 +1955,6 @@
       <BackgroundColor>White</BackgroundColor>
     </Style>
   </Body>
-  <ReportParameters>
-    <ReportParameter Name="testDateTime">
-      <DataType>String</DataType>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="trainInfo">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="department">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="axleNum">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="carNum">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="carNo">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="carInfo">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="name">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="Operator">
-      <DataType>String</DataType>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
-  </ReportParameters>
   <Width>209.99999mm</Width>
   <Page>
     <PageFooter>
@@ -2288,6 +2128,167 @@
       </Border>
     </Style>
   </Page>
-  <rd:ReportID>93d9d20d-ea81-4e9e-8d92-772643868849</rd:ReportID>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="tycho_kcDataSet">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>9d186abc-c236-4e4d-aa1b-0647f479fa9b</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>tycho_kcDataSet</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="carNo">
+          <DataField>carNo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="carInfo">
+          <DataField>carInfo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="axleNo">
+          <DataField>axleNo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_ts">
+          <DataField>L_ts</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_ts">
+          <DataField>R_ts</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_cs">
+          <DataField>L_cs</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_cs_deep">
+          <DataField>L_cs_deep</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_cs">
+          <DataField>R_cs</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_cs_deep">
+          <DataField>R_cs_deep</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_lj">
+          <DataField>L_lj</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_tmmh">
+          <DataField>L_tmmh</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_lyhd">
+          <DataField>L_lyhd</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_lygd">
+          <DataField>L_lygd</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_lwhd">
+          <DataField>L_lwhd</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="L_qr">
+          <DataField>L_qr</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ncj">
+          <DataField>ncj</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_lj">
+          <DataField>R_lj</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_tmmh">
+          <DataField>R_tmmh</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_lyhd">
+          <DataField>R_lyhd</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_lygd">
+          <DataField>R_lygd</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_lwhd">
+          <DataField>R_lwhd</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="R_qr">
+          <DataField>R_qr</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>tycho_kcDataSet</rd:DataSetName>
+        <rd:SchemaPath>E:\tycho\4.0网络版\Tycho_win7\www2_roll\www2\App_Code\tycho_kcDataSet.xsd</rd:SchemaPath>
+        <rd:TableName>DataTable_train_detail</rd:TableName>
+        <rd:TableAdapterFillMethod />
+        <rd:TableAdapterGetDataMethod />
+        <rd:TableAdapterName />
+      </rd:DataSetInfo>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="testDateTime">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="trainInfo">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="department">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="axleNum">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="carNum">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="carNo">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="carInfo">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="name">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Operator">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+  </ReportParameters>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>93d9d20d-ea81-4e9e-8d92-772643868849</rd:ReportID>
 </Report>

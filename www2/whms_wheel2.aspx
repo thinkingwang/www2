@@ -18,9 +18,9 @@
 
     <%=PUBS.OutputHead("") %>
     <div class="cmd">
-        <asp:LoginName ID="LoginName2" runat="server" SkinID="LoginName1" />
+        <asp:LoginName ID="LoginName2" runat="server" />
         <asp:LoginStatus ID="LoginStatus2" runat="server"  LogoutAction="RedirectToLoginPage" 
-            SkinID="LoginStatus1" onloggedout="LoginStatus2_LoggedOut" />
+             onloggedout="LoginStatus2_LoggedOut" />
         <asp:Button ID="bt_back" runat="server" Text="返回" onclientclick="javascript:history.go(-1);return false;" />
     </div>
     <table width="700" border="1" bordercolor="gray" cellspacing="0" 

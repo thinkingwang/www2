@@ -54,7 +54,7 @@ public partial class whms_wheel : System.Web.UI.Page
                 }
                 string carInfo = PUBS.GetCarInfo(datetimestr, carNo * 4);
 
-                ReportParameter rptPara0 = new ReportParameter("name", Application["SYS_NAME"].ToString());
+                ReportParameter rptPara0 = new ReportParameter("name", Session["SYS_NAME"].ToString());
                 ReportParameter rptPara1 = new ReportParameter("testDateTime", datetimestr);
                 trainInfo = PUBS.GetTrainInfo(datetimestr);
                 ReportParameter rptPara2 = new ReportParameter("trainInfo", trainInfo);
